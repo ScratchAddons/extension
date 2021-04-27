@@ -4,6 +4,9 @@
   "credits": [
     {
       "name": "NitroCipher/ZenithRogue"
+    },
+    {
+      "name": "djdolphin"
     }
   ],
   "userscripts": [
@@ -15,10 +18,27 @@
   "dynamicEnable": true,
   "dynamicDisable": true,
   "injectAsStyleElt": true,
+  "updateUserstylesOnSettingsChange": true,
   "userstyles": [
     {
       "url": "stageleft.css",
       "matches": ["https://scratch.mit.edu/projects/*"]
+    },
+    {
+      "url": "fullscreen-on-left.css",
+      "matches": ["https://scratch.mit.edu/projects/*"],
+      "settingMatch": {
+        "id": "fullscreenOnLeft",
+        "value": true
+      }
+    }
+  ],
+  "settings": [
+    {
+      "name": "Fullscreen button on left",
+      "id": "fullscreenOnLeft",
+      "type": "boolean",
+      "default": false
     }
   ],
   "tags": ["editor", "theme"],
