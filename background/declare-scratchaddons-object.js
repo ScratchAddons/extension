@@ -12,6 +12,7 @@ scratchAddons.eventTargets = {
   auth: [],
   settings: [],
   self: [],
+  storage: [],
 };
 
 // Event target for local background page events

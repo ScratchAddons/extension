@@ -82,6 +82,17 @@ const cs = {
       );
     });
   },
+  getAddonStorage(addonId) {
+    return new Promise((resolve, reject) => chrome.runtime.sendMessage({ getAddonStorage: { addonId } }, resolve));
+  },
+  setAddonStorage(addonId, storageDiff) {
+    return new Promise((resolve, reject) =>
+      chrome.runtime.sendMessage({ setAddonStorage: { addonId, storageDiff } }, resolve)
+    );
+  },
+  clearAddonStorage(addonId) {
+    return new Promise((resolve, reject) => chrome.runtime.sendMessage({ clearAddonStorage: { addonId } }, resolve));
+  },
 };
 Comlink.expose(cs, Comlink.windowEndpoint(comlinkIframe1.contentWindow, comlinkIframe2.contentWindow));
 
