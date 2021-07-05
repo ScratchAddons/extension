@@ -1,0 +1,12 @@
+{
+  "name": "Bold text on blocks",
+  "description": "Changes the Scratch block text to be bolder and easier to read.",
+    "userstyles": [
+    {
+      "url": "userstyle.css",
+      "matches": ["https://scratch.mit.edu/*"]
+    }
+  ],
+  "tags": ["editor"],
+  "enabledByDefault": false
+}
