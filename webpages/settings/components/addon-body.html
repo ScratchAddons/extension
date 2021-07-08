@@ -2,9 +2,9 @@
   <div class="addon-body" v-show="shouldShow" :id="'addon-' + addon._addonId">
     <div class="addon-topbar">
       <div class="clickeable-area" @click="expanded = !expanded">
-        <div class="btn-dropdown">
+        <button class="tabbable btn-dropdown">
           <img src="../../images/icons/expand.svg" alt="v" :class="{'reverted': expanded}" />
-        </div>
+        </button>
         <div class="addon-name">
           <img :src="addonIconSrc" class="icon-type" />
           <span @click="devShowAddonIds">{{ addon._displayedAddonId || addon.name }}</span>
@@ -13,16 +13,20 @@
       <addon-tag v-for="tag of addon.tags" :tag="tag"></addon-tag>
       <div class="addon-description" v-show="!expanded" dir="auto">{{ addon.description }}</div>
       <div class="addon-check">
-        <div
+        <button
           v-show="expanded && addon._enabled"
           v-if="addon.settings"
-          class="clear-settings"
+          class="tabbable clear-settings"
           title="{{ msg('resetToDefault') }}"
           @click="loadDefaults"
         >
           <img src="../../images/icons/undo.svg" class="icon-type" />
-        </div>
-        <div class="switch" :state="addon._enabled ? 'on' : 'off'" @click="toggleAddonRequest($event)"></div>
+        </button>
+        <button
+          class="tabbable switch"
+          :state="addon._enabled ? 'on' : 'off'"
+          @click="toggleAddonRequest($event)"
+        ></button>
       </div>
     </div>
     <div class="addon-settings" v-if="everExpanded" v-show="expanded">
@@ -62,7 +66,7 @@
         <div class="addon-setting" v-for="preset of addon.presets">
           <button
             type="preset-button"
-            class="large-button"
+            class="tabbable large-button"
             :disabled="!addon._enabled"
             @click="loadPreset(preset)"
             :title="preset.description"

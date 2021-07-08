@@ -42,7 +42,7 @@
     <link rel="icon" href="../../images/icon.png" />
 
     <!-- Preload index.js imports -->
-    <link rel="modulepreload" href="../../libraries/common/cs/download-blob.js"">
+    <link rel="modulepreload" href="../../libraries/common/cs/download-blob.js" />
     <link rel="modulepreload" href="../rtl-list.js" />
     <link rel="modulepreload" href="../../libraries/common/load-vue-components.js" />
     <link rel="modulepreload" href="../../libraries/thirdparty/fuse.basic.esm.min.js" />
@@ -91,6 +91,7 @@
        * Imports are here to attempt to speed up load. Also, it means licenses.html loads fewer unused styles, and this file doesn't get licenses.html's styles! In order of when it will be noticed/needed on the page
       */
       @import url("../styles/colors.css");
+      @import url("../styles/components/tabbable.css");
       @import url("../styles/components/badges.css");
       @import url("../styles/components/filter.css");
       @import url("../styles/components/categories.css");
@@ -103,7 +104,6 @@
     </style>
 
     <link rel="stylesheet" href="style.css" />
-
     <link href="../../libraries/thirdparty/Sora.css" rel="stylesheet" />
     <script src="../../libraries/thirdparty/vue.js" defer></script>
     <script src="../../libraries/thirdparty/color-picker.js" type="module"></script>
@@ -111,11 +111,101 @@
   </head>
   <body v-cloak :class="{light: theme}">
     <div class="navbar">
-      <img :src="switchPath" class="toggle" @click="sidebarToggle()" v-cloak v-show="smallMode" alt="Logo" />
+      <button v-cloak v-show="smallMode" class="toggle icon-tabbable" @click="sidebarToggle(!theme)">
+        <img :src="switchPath" alt="Logo" />
+      </button>
       <img src="../../images/icon.svg" class="logo" alt="Logo" />
       <h1 v-cloak>{{ msg("settings") }}</h1>
-      <img v-cloak @click="setTheme(!theme)" class="theme-switch" :src="themePath" />
+      <button v-cloak class="icon-tabbable theme-switch" @click="setTheme(!theme)">
+        <img :src="themePath" />
+      </button>
     </div>
+
+    <div v-cloak v-show="isOpen" class="modal">
+      <div class="modal-content" v-click-outside="modalClickOutside">
+        <div>
+          <button class="close tabbable" @click="modalToggle()">
+            <img alt="Logo" src="../../images/icons/close.svg" />
+          </button>
+          <h1 class="setting-heading">{{ msg("moreSettings") }}</h1>
+        </div>
+        <div class="addon-block settings-block">
+          <div class="addon-body">
+            <div class="addon-topbar">
+              <span class="addon-name"
+                ><img src="../../images/icons/theme.svg" class="icon-type" /> {{ msg("scratchAddonsTheme") }}
+              </span>
+            </div>
+            <div class="addon-settings">
+              <span class="addon-description-full">{{ msg("scratchAddonsThemeDescription") }}</span>
+              <div class="addon-setting">
+                <div class="filter-selector">
+                  <div class="filter-text">{{ msg("theme") }}</div>
+                  <div class="filter-options">
+                    <button class="tabbable filter-option" :class="{'sel': theme === true}" @click="setTheme(true)">
+                      {{ msg("light") }}
+                    </button>
+                    <button class="tabbable filter-option" :class="{'sel': theme === false}" @click="setTheme(false)">
+                      {{ msg("dark") }}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="addon-body">
+            <div class="addon-topbar">
+              <span class="addon-name"
+                ><img src="../../images/icons/import-export.svg" class="icon-type" :class="{'dark': theme === false}" />
+                {{ msg("exportAndImportSettings") }}
+              </span>
+            </div>
+            <div class="addon-settings">
+              <span class="addon-description-full">{{ msg("exportAndImportSettingsDescription") }}</span>
+              <span class="addon-description-full">{{ msg("useBrowserSync") }}</span>
+              <div class="addon-setting">
+                <div class="filter-selector">
+                  <button class="tabbable large-button" @click="exportSettings()">{{ msg("export") }}</button>
+                </div>
+                <div class="filter-selector">
+                  <button class="tabbable large-button" @click="importSettings()">{{ msg("import") }}</button>
+                  <button class="tabbable large-button hidden-button" id="confirmImport">
+                    {{ msg("confirmImport") }}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="footer">
+          <p>
+            {{ msg("extensionName") }}
+            <a
+              href="https://scratchaddons.com/changelog?versionname={{ versionName }}"
+              title="{{ msg('changelog') }}"
+              target="_blank"
+            >
+              v{{ version }}</a
+            >
+          </p>
+          <p>
+            <a
+              href="./licenses.html?libraries=icu-message-formatter,vue,color-picker-web-component,comlink,Sora,fuse"
+              target="_blank"
+              >{{ msg("libraryCredits") }}</a
+            >
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="popup" v-cloak v-show="showPopupModal">
+      <div class="label">{{ msg("settingsPagePermission", addonToEnable ? addonToEnable.name : "") }}</div>
+      <div>
+        <button class="tabbable large-button" @click="openFullSettings()">{{ msg("openFullSettings") }}</button>
+        <button class="tabbable large-button" @click="hidePopup()">{{ msg("skipOpenFullSettings") }}</button>
+      </div>
+    </div>
+
     <div class="main">
       <div
         class="categories-block"
@@ -153,10 +243,14 @@
           <img src="../../images/icons/comment.svg" />
           <span v-cloak>{{ msg("feedback") }} <img src="../../images/icons/popout.svg" /></span>
         </a>
-        <div class="category" style="cursor: pointer; margin-top: 12px; margin-bottom: 12px" @click="modalToggle()">
+        <button
+          class="tabbable category"
+          style="cursor: pointer; margin-top: 12px; margin-bottom: 12px"
+          @click="modalToggle()"
+        >
           <img src="../../images/icons/wrench.svg" />
           <span v-cloak>{{ msg("moreSettings") }}</span>
-        </div>
+        </button>
       </div>
       <div
         v-show="!isIframe && smallMode === false"
@@ -171,7 +265,7 @@
       <div class="addons-block">
         <div class="search-box" :class="{smallMode: smallMode === true}">
           <input type="text" id="searchBox" :placeholder="searchMsg" v-model="searchInputReal" autofocus />
-          <button v-show="searchInput === ''" class="search-button"></button>
+          <button v-show="searchInput === ''" class="search-button" tabindex="-1"></button>
           <button v-cloak v-else class="search-clear-button" @click="clearSearch()"></button>
         </div>
 
@@ -183,7 +277,7 @@
               v-show="searchInput === ''"
             >
               <span>{{ msg("exploreAllAddons", [addonAmt]) }}</span>
-              <button class="large-button" @click="openFullSettings()">{{ msg("openFullSettings") }}</button>
+              <button class="tabbable large-button" @click="openFullSettings()">{{ msg("openFullSettings") }}</button>
             </div>
             <addon-group-header
               v-if="addon.headerAbove"
@@ -199,86 +293,6 @@
             ></addon-body>
           </template>
         </div>
-      </div>
-    </div>
-    <div v-cloak v-show="isOpen" class="modal">
-      <div class="modal-content" v-click-outside="modalClickOutside">
-        <div>
-          <img @click="modalToggle()" class="close" alt="Logo" src="../../images/icons/close.svg" />
-          <h1 class="setting-heading">{{ msg("moreSettings") }}</h1>
-        </div>
-        <div class="addon-block settings-block">
-          <div class="addon-body">
-            <div class="addon-topbar">
-              <span class="addon-name"
-                ><img src="../../images/icons/theme.svg" class="icon-type" /> {{ msg("scratchAddonsTheme") }}
-              </span>
-            </div>
-            <div class="addon-settings">
-              <span class="addon-description-full">{{ msg("scratchAddonsThemeDescription") }}</span>
-              <div class="addon-setting">
-                <div class="filter-selector">
-                  <div class="filter-text">{{ msg("theme") }}</div>
-                  <div class="filter-options">
-                    <div class="filter-option" :class="{'sel': theme === true}" @click="setTheme(true)">
-                      {{ msg("light") }}
-                    </div>
-                    <div class="filter-option" :class="{'sel': theme === false}" @click="setTheme(false)">
-                      {{ msg("dark") }}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="addon-body">
-            <div class="addon-topbar">
-              <span class="addon-name"
-                ><img src="../../images/icons/import-export.svg" class="icon-type" :class="{'dark': theme === false}" />
-                {{ msg("exportAndImportSettings") }}
-              </span>
-            </div>
-            <div class="addon-settings">
-              <span class="addon-description-full">{{ msg("exportAndImportSettingsDescription") }}</span>
-              <span class="addon-description-full">{{ msg("useBrowserSync") }}</span>
-              <div class="addon-setting">
-                <div class="filter-selector">
-                  <button class="large-button" @click="exportSettings()">{{ msg("export") }}</button>
-                </div>
-                <div class="filter-selector">
-                  <button class="large-button" @click="importSettings()">{{ msg("import") }}</button>
-                  <button class="large-button hidden-button" id="confirmImport">{{ msg("confirmImport") }}</button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="footer">
-          <p>
-            {{ msg("extensionName") }}
-            <a
-              href="https://scratchaddons.com/changelog?versionname={{ versionName }}"
-              title="{{ msg('changelog') }}"
-              target="_blank"
-            >
-              v{{ version }}</a
-            >
-          </p>
-          <p>
-            <a
-              href="./licenses.html?libraries=icu-message-formatter,vue,color-picker-web-component,comlink,Sora,fuse"
-              target="_blank"
-              >{{ msg("libraryCredits") }}</a
-            >
-          </p>
-        </div>
-      </div>
-    </div>
-    <div class="popup" v-cloak v-show="showPopupModal">
-      <div class="label">{{ msg("settingsPagePermission", addonToEnable ? addonToEnable.name : "") }}</div>
-      <div>
-        <button class="large-button" @click="openFullSettings()">{{ msg("openFullSettings") }}</button>
-        <button class="large-button" @click="hidePopup()">{{ msg("skipOpenFullSettings") }}</button>
       </div>
     </div>
   </body>

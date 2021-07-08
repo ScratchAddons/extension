@@ -1,4 +1,7 @@
 @import url("/libraries/thirdparty/Sora.css");
+@import url("../colors.css");
+@import url("./tabbable.css");
+
 html {
   font-size: 12px;
   height: 100%;
@@ -15,7 +18,8 @@ body {
   font-family: "Sora", sans-serif;
   width: auto;
   overflow-x: hidden;
-  background-color: #222;
+  background-color: var(--accent-2);
+  color: var(--accent-5);
 }
 
 body.fullscreen {

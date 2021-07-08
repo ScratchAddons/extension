@@ -4,7 +4,8 @@
       :style="{'background-color': color }"
       class="setting-input color"
       :class="{'action-disabled': !addon._enabled }"
-      @click="toggle(addon, setting, true)"
+      @click="toggle(addon, setting)"
+      @focus="loadColorPicker = true"
     >
       <template v-if="loadColorPicker">
         <color-picker
@@ -15,6 +16,7 @@
           :formats="formats"
           :no_alpha="noAlphaString"
           dir="ltr"
+          @click.stop="'All we really want to do is stopPropigation here.'"
         ></color-picker>
       </template>
     </button>

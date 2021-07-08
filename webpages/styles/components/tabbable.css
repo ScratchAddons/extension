@@ -1,0 +1,21 @@
+.tabbable,
+.icon-tabbable {
+  display: flex;
+  align-items: inherit;
+  background: none;
+  border: none;
+  padding: 0px;
+  color: unset;
+  font-size: inherit;
+  font-family: inherit;
+}
+:is(.tabbable, a):focus {
+  outline: none;
+  border-color: var(--brand-orange);
+  box-shadow: 0 0 0 3px #ff7d265d;
+}
+.icon-tabbable:focus {
+  outline: none;
+  background: #00000038;
+  border-radius: 8px;
+}

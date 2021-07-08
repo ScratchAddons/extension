@@ -87,7 +87,7 @@
       <button
         v-else
         type="button"
-        class="large-button clear-button"
+        class="tabbable large-button clear-button"
         :disabled="!addon._enabled"
         @click="updateOption(setting.default)"
       >
@@ -97,14 +97,14 @@
     </template>
     <template v-if="setting.type === 'select'">
       <div class="filter-options">
-        <div
-          class="filter-option"
+        <button
+          class="tabbable filter-option"
           v-for="option of setting.potentialValues"
           :class="{'sel' : addonSettings[addon._addonId][setting.id] === option.id, 'disabled': !addon._enabled}"
           @click="updateOption(option.id);"
         >
           {{ option.name }}
-        </div>
+        </button>
       </div>
     </template>
   </div>
@@ -166,74 +166,5 @@
     font-weight: 600;
     font-size: 12px;
     margin-inline-end: 10px;
-  }
-
-  .setting-dropdown {
-    position: relative;
-  }
-  .setting-dropdown.open .clear-button {
-    border-bottom-right-radius: 0;
-    background: #151515;
-  }
-  [dir="rtl"] .setting-dropdown.open .clear-button {
-    border-bottom-right-radius: 4px;
-    border-bottom-left-radius: 0;
-  }
-  .setting-dropdown ul {
-    position: absolute;
-    top: calc(100% - 1px);
-    right: 0;
-    margin: 0;
-    padding: 6px 0;
-    display: none;
-    z-index: 3;
-    border-radius: 4px;
-    border-top-right-radius: 0;
-    background: var(--accent-2);
-    color: var(--accent-5);
-    border: 1px solid #000;
-  }
-  [dir="rtl"] .setting-dropdown ul {
-    right: auto;
-    left: 0;
-    border-top-right-radius: 4px;
-    border-top-left-radius: 0;
-  }
-  .setting-dropdown.open ul {
-    display: block;
-  }
-  .setting-dropdown li {
-    padding: 6px 12px;
-    list-style: none;
-    white-space: nowrap;
-    text-align: start;
-    transition: 0.25s ease;
-    user-select: none;
-  }
-  .setting-dropdown li:hover {
-    background: #151515;
-  }
-  .setting-dropdown li > * {
-    vertical-align: middle;
-  }
-  .setting-dropdown .reset-preview {
-    display: inline-block;
-    width: 18px;
-    height: 18px;
-    margin-inline-end: 8px;
-    border-radius: 5px;
-    background: linear-gradient(45deg, #777 25%, transparent 25%), linear-gradient(-45deg, #777 25%, transparent 25%),
-      linear-gradient(45deg, transparent 75%, #777 75%), linear-gradient(-45deg, transparent 75%, #777 75%);
-    background-color: white;
-    background-size: 6px 6px;
-    background-position: 0 0, 0 3px, 3px -3px, -3px 0px;
-  }
-  .setting-dropdown .reset-preview span {
-    display: inline-block;
-    width: 100%;
-    height: 100%;
-    box-sizing: border-box;
-    border-radius: 4px;
-    border: 1px solid #000;
   }
 </style>

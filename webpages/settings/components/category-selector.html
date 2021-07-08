@@ -1,6 +1,6 @@
 <template>
-  <div
-    class="category"
+  <button
+    class="tabbable category"
     :class="{
         sel: category.id === selectedCategory,
         hasParent: category.parent,
@@ -12,7 +12,7 @@
   >
     <img :src="'../../images/icons/' + category.icon + '.svg'" />
     <span>{{ category.name }}</span>
-  </div>
+  </button>
 </template>
 
 <style>

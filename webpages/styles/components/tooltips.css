@@ -43,7 +43,7 @@
   left: 100%;
 }
 
-.tooltip:hover .tooltiptext {
+.tooltip:is(:hover, :focus) .tooltiptext {
   visibility: visible;
 }
 .tooltip .tooltiptext::after {
@@ -72,6 +72,6 @@
   right: 100%;
 }
 
-.tooltiptext:hover .tooltiptext:after {
+.tooltiptext:is(:hover, :focus) .tooltiptext:after {
   visibility: visible;
 }

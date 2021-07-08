@@ -104,7 +104,7 @@ img :not(.navbar, .icon-type) {
 .btn-dropdown img,
 .categories-shrink img,
 .category img,
-.addon-group > span > img,
+.addon-group img,
 .addon-group > span:after {
   filter: invert(1) brightness(0);
 }

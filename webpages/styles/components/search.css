@@ -34,7 +34,6 @@
   width: 45px;
   border: none;
   border-radius: 0 4px 4px 0;
-  outline: none;
   cursor: pointer;
 }
 [dir="rtl"] .search-box > button {

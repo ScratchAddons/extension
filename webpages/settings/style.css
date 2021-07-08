@@ -22,7 +22,7 @@ body {
   color: #fff;
   display: flex;
   align-items: center;
-  padding: 0 20px;
+  padding: 0 20px 0 15px;
   filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.5));
   user-select: none;
   z-index: 10;
@@ -49,38 +49,6 @@ h1 {
   height: calc(100% - 60px);
   width: 100%;
   align-items: stretch;
-}
-
-.addon-group.margin-above {
-  margin-top: 20px;
-}
-
-.addon-group > span {
-  display: flex;
-  align-items: center;
-  cursor: pointer;
-  margin: 0px 16px;
-}
-
-.addon-group > span > img {
-  height: 23px;
-  width: 23px;
-  margin-inline-end: 5px;
-  padding: 5px;
-  border-radius: 4px;
-}
-
-.addon-group > span > img:hover {
-  background-color: rgba(255, 255, 255, 0.05);
-}
-
-.addon-group > span:after {
-  content: "";
-  border-top: 1px solid white;
-  width: 100px;
-  margin-inline: 10px;
-  flex: 1;
-  opacity: 0.5;
 }
 
 .addons-block {
@@ -151,13 +119,11 @@ h1 {
   padding: 6px 12px;
   border-radius: 4px;
   transition: 0.25s ease;
-  outline: none;
   height: 32px;
   font-family: inherit;
   font-size: 12px;
 }
 .large-button:hover:not([disabled]) {
-  outline: none;
   background: #151515;
 }
 
@@ -195,10 +161,13 @@ h1 {
 }
 
 .theme-switch {
-  height: 25px;
-  right: 25px;
+  right: 20px;
   position: fixed;
   cursor: pointer;
+  padding: 5px;
+}
+.theme-switch img {
+  height: 25px;
 }
 [dir="rtl"] .theme-switch {
   right: auto;

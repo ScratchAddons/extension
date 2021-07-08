@@ -7,12 +7,18 @@
   box-sizing: border-box;
   filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.5));
 }
+
 .toggle {
+  margin-inline-end: 5px;
+  padding: 5px;
+
   cursor: pointer;
+}
+.toggle img {
   width: 24px;
   height: 24px;
-  margin-inline-end: 10px;
 }
+
 .search-box.smallMode {
   overflow-y: hidden;
 }

@@ -4,7 +4,6 @@
     <meta charset="UTF-8" />
     <title></title>
     <script src="../../webpages/set-lang.js" type="module"></script>
-    <link rel="stylesheet" href="popup.css" />
     <script src="../../libraries/thirdparty/vue.js" defer></script>
     <link rel="preload" href="light.css" as="style" />
     <script src="./popup.js" type="module"></script>
@@ -12,6 +11,7 @@
       @import url("../../webpages/styles/components/tooltips.css");
       @import url("../../webpages/styles/components/popup.css");
     </style>
+    <link rel="stylesheet" href="popup.css" />
     <base target="_blank" />
 
     <!-- <comment> element template -->
@@ -33,7 +33,12 @@
             <img src="../../images/icons/popout.svg" class="popout-comment" title="{{ messages.openNewTabMsg }}" />
           </a>
         </span>
-        <a @click="deleteComment()" class="delete-btn" :class="{'bold': deleteStep === 1}" v-show="!deleted"
+        <a
+          @click.prevent="deleteComment()"
+          class="delete-btn nolink"
+          href="#"
+          :class="{'bold': deleteStep === 1}"
+          v-show="!deleted"
           >{{ deleteStep === 0 ? messages.deleteMsg : messages.deleteConfirmMsg }}
         </a>
         <bdo dir="ltr">
@@ -41,8 +46,9 @@
           <div class="comment-content" :class="{'comment-self' : thisComment.author === username}">
             <span class="comment-content-text">{{{ thisComment.content }}}</span>
             <a
-              class="reply-button-comment"
-              @click="replying = true"
+              class="reply-button-comment nolink"
+              href="#"
+              @click.prevent="replying = true"
               :class="{'replying': replying}"
               :style="{'visibility': replying ? 'hidden' : 'visible'}"
               v-show="!deleted"
@@ -53,10 +59,19 @@
         <div class="reply-box-comment" v-show="replying">
           <textarea class="reply-textarea" maxlength="500" v-model="replyBoxValue"></textarea>
           <div class="reply-box-buttons">
-            <button @click="!postingComment && postComment()" style="background-color: #4d97ff">
+            <button
+              class="tabbable large-button"
+              @click="!postingComment && postComment()"
+              style="background-color: #4d97ff"
+            >
               {{ postingComment ? messages.postingMsg : messages.postMsg }}
             </button>
-            <button @click="replying = false" style="background-color: gray" v-show="!postingComment">
+            <button
+              class="tabbable large-button"
+              @click="replying = false"
+              style="background-color: gray"
+              v-show="!postingComment"
+            >
               {{ messages.cancelMsg }}
             </button>
             <span class="comment-chars"> {{ replyBoxLeftMsg }}</span>
@@ -74,9 +89,9 @@
           class="message-type-title hover-reverse"
           @click="messageTypeExtended.stMessages = !messageTypeExtended.stMessages"
         >
-          <div class="btn-dropdown">
+          <button class="tabbable btn-dropdown">
             <img src="../../images/icons/expand.svg" alt="v" :class="{'reverted': messageTypeExtended.stMessages}" />
-          </div>
+          </button>
           <span class="message-type-title-text">{{ uiMessages.stMessagesMsg }}</span>
           <span class="float-right"
             ><img class="small-icon inverted" src="../../images/icons/notice.svg" /> {{ stMessages.length }}</span
@@ -97,9 +112,9 @@
           class="message-type-title hover-reverse"
           @click="messageTypeExtended.follows = !messageTypeExtended.follows"
         >
-          <div class="btn-dropdown">
+          <button class="tabbable btn-dropdown">
             <img src="../../images/icons/expand.svg" alt="v" :class="{'reverted': messageTypeExtended.follows}" />
-          </div>
+          </button>
           <span class="message-type-title-text">{{ uiMessages.followsMsg }}</span>
           <span class="float-right"
             ><img class="small-icon" src="../../images/icons/follow.svg" /> {{ follows.length }}</span
@@ -118,9 +133,9 @@
           class="message-type-title hover-reverse"
           @click="messageTypeExtended.studioInvites = !messageTypeExtended.studioInvites"
         >
-          <div class="btn-dropdown">
+          <button class="tabbable btn-dropdown">
             <img src="../../images/icons/expand.svg" alt="v" :class="{'reverted': messageTypeExtended.studioInvites}" />
-          </div>
+          </button>
           <span class="message-type-title-text">{{ uiMessages.studioInvitesMsg }}</span>
           <span class="float-right"
             ><img class="small-icon" src="../../images/icons/studio-add.svg" /> {{ studioInvites.length }}</span
@@ -137,13 +152,13 @@
           class="message-type-title hover-reverse"
           @click="messageTypeExtended.studioPromotions = !messageTypeExtended.studioPromotions"
         >
-          <div class="btn-dropdown">
+          <button class="tabbable btn-dropdown">
             <img
               src="../../images/icons/expand.svg"
               alt="v"
               :class="{'reverted': messageTypeExtended.studioPromotions}"
             />
-          </div>
+          </button>
           <span class="message-type-title-text">{{ uiMessages.studioPromotionsMsg }}</span>
           <span class="float-right"
             ><img class="small-icon" src="../../images/icons/adminusers.svg" /> {{ studioPromotions.length }}</span
@@ -160,13 +175,13 @@
           class="message-type-title hover-reverse"
           @click="messageTypeExtended.forumActivity = !messageTypeExtended.forumActivity"
         >
-          <div class="btn-dropdown">
+          <button class="tabbable btn-dropdown">
             <img
               src="../../../images/icons/expand.svg"
               alt="v"
               :class="{'reverted': messageTypeExtended.forumActivity}"
             />
-          </div>
+          </button>
           <span class="message-type-title-text">{{ uiMessages.forumMsg }}</span>
           <span class="float-right"
             ><img class="small-icon" src="../../images/icons/forum.svg" /> {{ forumActivity.length }}</span
@@ -183,13 +198,13 @@
           class="message-type-title hover-reverse"
           @click="messageTypeExtended.studioActivity = !messageTypeExtended.studioActivity"
         >
-          <div class="btn-dropdown">
+          <button class="tabbable btn-dropdown">
             <img
               src="../../images/icons/expand.svg"
               alt="v"
               :class="{'reverted': messageTypeExtended.studioActivity}"
             />
-          </div>
+          </button>
           <span class="message-type-title-text">{{ uiMessages.studioActivityMsg }}</span>
           <span class="float-right"
             ><img class="small-icon" src="../../images/icons/studio.svg" /> {{ studioActivity.length }}</span
@@ -206,9 +221,9 @@
           class="message-type-title hover-reverse"
           @click="messageTypeExtended.remixes = !messageTypeExtended.remixes"
         >
-          <div class="btn-dropdown">
+          <button class="tabbable btn-dropdown">
             <img src="../../images/icons/expand.svg" alt="v" :class="{'reverted': messageTypeExtended.remixes}" />
-          </div>
+          </button>
           <span class="message-type-title-text">{{ uiMessages.remixesMsg }}</span>
           <span class="float-right"
             ><img class="small-icon" src="../../images/icons/remix.svg" /> {{ remixes.length }}</span
@@ -326,7 +341,12 @@
             >{{ project.title }}</a
           >
           <span class="float-right">
-            <div class="tooltip" v-if="project.loveCount || project.favoriteCount" style="display: inline-block">
+            <div
+              tabindex="0"
+              class="tabbable tooltip"
+              v-if="project.loveCount || project.favoriteCount"
+              style="display: inline-block"
+            >
               <span class="tooltip-indicator">
                 <span v-show="project.loveCount"
                   ><img class="small-icon colored" src="../../images/icons/heart.svg" /> {{project.loveCount}}</span
@@ -371,18 +391,18 @@
     </div>
 
     <!-- Show errors, loading, etc. -->
-    <div style="text-align: center; font-size: 0.9rem; padding-bottom: 3.5rem; font-weight: bold">
+    <div class="signals">
       <br />
       <span v-show="error === 'notReady'">{{ uiMessages.loadingMsg }}</span>
       <span v-show="error === 'loggedOut'">{{ uiMessages.loggedOutMsg }}</span>
       <span v-show="messagesReady && !commentsReady">{{ uiMessages.loadingCommentsMsg }}</span>
-      <button @click="reloadPage()" v-show="commentsReady && !canShowMoreMessages">
+      <button class="tabbable large-button" @click="reloadPage()" v-show="commentsReady && !canShowMoreMessages">
         <img class="small-icon" src="../../images/icons/reload.svg" /> {{ uiMessages.reloadMsg }}
       </button>
       <span v-show="messagesReady && showingMessagesAmt === 0 && stMessages.length === 0"
         >{{ uiMessages.noUnreadMsg }}<br /><br
       /></span>
-      <button @click="showAllMessages = true" v-show="canShowMoreMessages">
+      <button class="tabbable large-button" @click="showAllMessages = true" v-show="canShowMoreMessages">
         <img class="small-icon" src="../../images/icons/plus.svg" /> {{ uiMessages.showMoreMsg }}
       </button>
     </div>

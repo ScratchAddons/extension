@@ -5,8 +5,9 @@
     <script src="../set-lang.js" type="module"></script>
     <script src="../check-unsupported.js" defer></script>
     <style>
-      @import url("../styles/components/tooltips.css");
       @import url("../styles/colors.css");
+      @import url("../styles/components/tabbable.css");
+      @import url("../styles/components/tooltips.css");
     </style>
     <link rel="stylesheet" href="style.css" />
     <link href="../../libraries/thirdparty/Sora.css" rel="stylesheet" />
@@ -32,16 +33,16 @@
           ></span
         >
       </div>
-      <div id="settings" @click="openSettingsPage()">
+      <button class="icon-tabbable" id="settings" @click="openSettingsPage()">
         <img src="../../images/icons/settings.svg" id="settings-icon" title="{{ msg('settings') }}" />
-      </div>
+      </button>
     </div>
     <div id="popups">
       <div id="popup-bar">
         <div id="popup-chooser" style="visibility: hidden" :style="{ visibility: 'visible' }">
-          <div
+          <button
             v-for="popup of popups"
-            class="popup-name"
+            class="tabbable popup-name"
             :class="{ sel: currentPopup === popup }"
             @click="setPopup(popup)"
           >
@@ -49,14 +50,14 @@
             <a class="popup-title">{{ popup.name }} {{ popup.fullscreen ? "\u00a0" : "" }}</a>
             <a
               v-if="popup.fullscreen"
-              class="popout"
+              class="icon-tabbable popout"
               href="../../popups/{{ popup._addonId }}/popup.html"
               target="_blank"
               @click="closePopup()"
             >
               <img src="../../images/icons/popout.svg" class="popout-img" title="{{ msg('openInNewTab') }}" />
             </a>
-          </div>
+          </button>
         </div>
       </div>
       <iframe

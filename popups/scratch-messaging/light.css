@@ -1,21 +1,17 @@
-body {
-  background: white;
-  color: #222;
+:root {
+  --accent-1: #f7f7f7;
+  --accent-2: #f7f7f7;
+  --accent-3: #ecebeb;
+  --accent-4: #555;
+  --accent-5: #222;
 }
 
-button {
-  border: 1px solid #8f8f8f;
-  background: #e0e0e0;
-  color: #222;
-}
 #bottom-bar {
   background: #e3e3e3;
 }
 
 .message-type {
-  border: 1px solid #cfcfcf;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  background: #f7f7f7;
 }
 .message-type-title {
   color: black;
