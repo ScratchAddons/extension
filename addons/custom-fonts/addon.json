@@ -1,0 +1,67 @@
+{
+  "name": "Customizable fonts",
+  "description": "Customize the font family for different parts of Scratch. Choose a font from fonts.google.com and enter it into one or more of the boxes.",
+  "tags": ["theme", "beta", "editor"],
+  "credits": [
+    {
+      "name": "ErrorGamer2000",
+      "link": "https://scratch.mit.edu/users/ErrorGamer2000/"
+    }
+  ],
+  "info": [
+    {
+      "type": "notice",
+      "id": "bunchwarn",
+      "text": "Letters in wider fonts will be bunched together. Try not to use excessively large fonts."
+    }
+  ],
+  "libraries": ["webfont"],
+  "enabledByDefault": false,
+  "dynamicEnable": true,
+  "dynamicDisable": true,
+  "userscripts": [
+    {
+      "url": "userscript.js",
+      "matches": ["https://scratch.mit.edu/*"],
+      "runAtComplete": false
+    }
+  ],
+  "settings": [
+    {
+      "name": "Navigation bar font",
+      "id": "navfnt",
+      "type": "string",
+      "default": "Helvetica"
+    },
+    {
+      "name": "Main font",
+      "id": "mainfnt",
+      "type": "string",
+      "default": "Helvetica"
+    },
+    {
+      "name": "Editor font",
+      "id": "editfnt",
+      "type": "string",
+      "default": "Helvetica"
+    },
+    {
+      "name": "Block Font",
+      "id": "blockfnt",
+      "type": "string",
+      "default": "Helvetica"
+    },
+    {
+      "name": "Header font",
+      "id": "headfnt",
+      "type": "string",
+      "default": "Helvetica"
+    },
+    {
+      "name": "Footer font",
+      "id": "footerfnt",
+      "type": "string",
+      "default": "Helvetica"
+    }
+  ]
+}
