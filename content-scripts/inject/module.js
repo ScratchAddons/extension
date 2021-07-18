@@ -1,3 +1,4 @@
+import Tab from "../../addon-api/content-script/Tab.js";
 import runAddonUserscripts from "./run-userscript.js";
 import Localization from "./l10n.js";
 
@@ -123,7 +124,7 @@ class SharedObserver {
   }
 }
 
-function onDataReady() {
+async function onDataReady() {
   const addons = page.addonsWithUserscripts;
 
   scratchAddons.l10n = new Localization(page.l10njson);
@@ -161,6 +162,13 @@ function onDataReady() {
     });
     observer.observe(document.documentElement, { subtree: true, childList: true });
   }
+
+  const exampleTab = new Tab({});
+  if (exampleTab.editorMode === "editor") inject(await exampleTab.traps.getBlockly());
+  exampleTab.addEventListener(
+    "urlChange",
+    async () => exampleTab.editorMode === "editor" && inject(await exampleTab.traps.getBlockly())
+  );
 }
 
 function bodyIsEditorClassCheck() {
@@ -287,4 +295,42 @@ if (location.pathname === "/discuss/3/topic/add/") {
     }
   };
   if (!checkUA()) window.addEventListener("DOMContentLoaded", () => checkUA(), { once: true });
+}
+
+let injected = false;
+function inject(Blockly) {
+  if (injected) return;
+  injected = true;
+  let oldShow = Blockly.ContextMenu.show;
+  Blockly.ContextMenu.show = function (event, items, rtl) {
+    const gesture = Blockly.mainWorkspace.currentGesture_;
+    const block = gesture.targetBlock_;
+
+    let allItems = [];
+    scratchAddons.eventTargets.tab.forEach((eventTarget) => {
+      allItems.push(...eventTarget._blockContextMenu);
+    });
+
+    for (const { callback, workspace, blocks, flyout, comments } of allItems) {
+      let injectMenu =
+        // Workspace
+        (workspace && !block && !gesture.flyout_ && !gesture.startBubble_) ||
+        // Block in workspace
+        (blocks && block && !gesture.flyout_) ||
+        // Block in flyout
+        (flyout && gesture.flyout_) ||
+        // Comments
+        (comments && gesture.startBubble_);
+      if (injectMenu) items = callback(items, block);
+    }
+
+    oldShow.call(this, event, items, rtl);
+    items.forEach((item, i) => {
+      if (item.separator) {
+        const itemElt = document.querySelector(".blocklyContextMenu").children[i];
+        itemElt.style.paddingTop = "2px";
+        itemElt.style.borderTop = "1px solid hsla(0, 0%, 0%, 0.15)";
+      }
+    });
+  };
 }
