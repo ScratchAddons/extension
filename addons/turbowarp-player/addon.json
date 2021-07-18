@@ -1,0 +1,48 @@
+{
+  "name": "TurboWarp button on project pages",
+  "description": "Adds a button to visit a project in turbowarp.",
+  "info": [
+    {
+      "type": "notice",
+      "text": "If using the \"Replace player option\", all addons that change or add things in the project player will not be added. However, TW's features like Alt + Clicking the flag is still possible.",
+      "id": "addonWontWork"
+    }
+  ],
+  "credits": [
+    {
+      "name": "TheColaber",
+      "link": "https://scratch.mit.edu/users/TheColaber"
+    }
+  ],
+  "userscripts": [
+    {
+      "url": "userscript.js",
+      "matches": ["projects"]
+    }
+  ],
+  "userstyles": [
+    {
+      "url": "style.css",
+      "matches": ["projects"]
+    }
+  ],
+  "settings": [
+    {
+      "name": "Button Action",
+      "id": "action",
+      "type": "select",
+      "potentialValues": [
+        {
+          "id": "player",
+          "name": "Replace player"
+        },
+        {
+          "id": "link",
+          "name": "Open tab"
+        }
+      ],
+      "default": "link"
+    }
+  ],
+  "tags": ["editor", "projectPage"]
+}
