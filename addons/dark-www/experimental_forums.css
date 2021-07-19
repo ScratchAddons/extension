@@ -111,3 +111,7 @@
 .my-ocular-popup::after {
   border-top-color: #202020;
 }
+
+.closed-topic a {
+  color: #c0c0c0;
+}
