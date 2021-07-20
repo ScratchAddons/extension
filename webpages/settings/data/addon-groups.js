@@ -28,7 +28,7 @@ export default [
 
   {
     id: "new",
-    name: chrome.i18n.getMessage("new"),
+    name: chrome.i18n.getMessage("newGroup"),
     addonIds: [],
     expanded: true,
     iframeShow: false,
@@ -44,7 +44,15 @@ export default [
   },
   {
     id: "recommended",
-    name: chrome.i18n.getMessage("recommended"),
+    name: chrome.i18n.getMessage("recommendedGroup"),
+    addonIds: [],
+    expanded: true,
+    iframeShow: false,
+    fullscreenShow: true,
+  },
+  {
+    id: "featured",
+    name: chrome.i18n.getMessage("featuredGroup"),
     addonIds: [],
     expanded: true,
     iframeShow: false,
@@ -59,8 +67,16 @@ export default [
     fullscreenShow: true,
   },
   {
+    id: "forums",
+    name: chrome.i18n.getMessage("forums"),
+    addonIds: [],
+    expanded: false,
+    iframeShow: false,
+    fullscreenShow: true,
+  },
+  {
     id: "beta",
-    name: chrome.i18n.getMessage("beta"),
+    name: chrome.i18n.getMessage("betaGroup"),
     addonIds: [],
     expanded: false,
     iframeShow: false,

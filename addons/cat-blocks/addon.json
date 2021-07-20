@@ -32,7 +32,7 @@
     }
   ],
   "versionAdded": "1.14.0",
-  "tags": ["editor", "codeEditor"],
+  "tags": ["editor", "codeEditor", "featured"],
   "enabledByDefault": false,
   "libraries": ["scratch-blocks"]
 }

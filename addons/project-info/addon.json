@@ -1,7 +1,7 @@
 {
   "name": "Sprite and script count",
   "description": "Shows the number of sprites and scripts a project has.",
-  "tags": ["community", "projectPage"],
+  "tags": ["community", "projectPage", "featured"],
   "credits": [
     {
       "name": "TheColaber",

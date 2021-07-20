@@ -135,7 +135,7 @@
       ]
     }
   ],
-  "tags": ["editor", "theme", "codeEditor", "recommended"],
+  "tags": ["editor", "theme", "codeEditor", "featured"],
   "enabledByDefault": false,
   "presets": [
     {

@@ -42,10 +42,20 @@
     "message": "Unmute"
   },
   "recommended": {
-    "message": "Recommended"
+    "message": "Recommended",
+    "description": "Tag for single addon. Singular."
+  },
+  "recommendedGroup": {
+    "message": "Recommended",
+    "description": "Name of addon group. Plural, if possible."
   },
   "beta": {
-    "message": "Beta"
+    "message": "Beta",
+    "description": "Tag for single addon. Singular."
+  },
+  "betaGroup": {
+    "message": "Beta",
+    "description": "Name of addon group. Plural, if possible."
   },
   "danger": {
     "message": "Dangerous"
@@ -61,6 +71,14 @@
   },
   "forWebsite": {
     "message": "For website"
+  },
+  "featured": {
+    "message": "Featured",
+    "description": "Singular"
+  },
+  "featuredGroup": {
+    "message": "Featured",
+    "description": "Name of addon group. Plural, if possible."
   },
   "confirmPreset": {
     "message": "Are you sure you want to load this preset?"
@@ -246,7 +264,12 @@
     "message": "Scratch Addons is not affiliated with Scratch."
   },
   "new": {
-    "message": "New!"
+    "message": "New!",
+    "description": "Tag for single addon. Singular."
+  },
+  "newGroup": {
+    "message": "New",
+    "description": "Name of addon group. Plural, if possible."
   },
   "enabled": {
     "message": "Enabled",

@@ -22,6 +22,6 @@
       "matches": ["https://scratch.mit.edu/projects/*"]
     }
   ],
-  "tags": ["editor", "codeEditor", "theme"],
+  "tags": ["editor", "codeEditor", "theme", "featured"],
   "enabledByDefault": false
 }

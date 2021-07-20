@@ -15,6 +15,6 @@
     }
   ],
   "versionAdded": "1.16.0",
-  "tags": ["community", "forums", "easterEgg"],
+  "tags": ["community", "forums"],
   "enabledByDefault": false
 }

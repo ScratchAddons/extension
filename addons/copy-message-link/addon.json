@@ -33,5 +33,5 @@
   "dynamicDisable": true,
   "versionAdded": "1.10.0",
   "tags": ["community", "comments", "recommended"],
-  "enabledByDefault": false
+  "enabledByDefault": true
 }

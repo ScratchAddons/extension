@@ -14,6 +14,11 @@ export default [
     color: "blue",
   },
   {
+    name: "featured",
+    matchName: "featured",
+    color: "yellow",
+  },
+  {
     name: "new",
     matchName: "new",
     color: "purple",
@@ -42,7 +47,7 @@ export default [
   {
     name: "forWebsite",
     matchName: "community",
-    color: "yellow",
+    color: "lightblue",
     addonTabShow: {
       theme: true,
     },

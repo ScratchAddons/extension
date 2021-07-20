@@ -22,5 +22,5 @@
   "dynamicDisable": true,
   "versionAdded": "1.12.0",
   "tags": ["editor", "recommended"],
-  "enabledByDefault": false
+  "enabledByDefault": true
 }

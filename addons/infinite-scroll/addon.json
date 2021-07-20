@@ -108,7 +108,7 @@
       }
     }
   ],
-  "tags": ["community"],
+  "tags": ["community", "featured"],
   "versionAdded": "1.2.0",
   "enabledByDefault": false
 }

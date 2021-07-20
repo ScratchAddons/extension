@@ -62,7 +62,7 @@
       ]
     }
   ],
-  "tags": ["community", "profiles"],
+  "tags": ["community", "profiles", "featured"],
   "versionAdded": "1.3.0",
   "enabledByDefault": false
 }

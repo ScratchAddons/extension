@@ -106,5 +106,5 @@
   "tags": ["editor", "costumeEditor", "recommended"],
   "dynamicEnable": true,
   "dynamicDisable": true,
-  "enabledByDefault": false
+  "enabledByDefault": true
 }

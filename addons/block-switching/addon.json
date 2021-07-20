@@ -85,5 +85,5 @@
     }
   ],
   "libraries": ["scratch-blocks"],
-  "enabledByDefault": false
+  "enabledByDefault": true
 }

@@ -24,7 +24,7 @@
       "matches": ["projects"]
     }
   ],
-  "tags": ["editor", "beta"],
+  "tags": ["editor", "featured"],
   "enabledByDefault": false,
   "versionAdded": "1.16.0"
 }

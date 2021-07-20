@@ -2,6 +2,7 @@
   "name": "Scratch 2.0 \u2192 3.0",
   "description": "Makes Scratch 2.0-styled pages look like Scratch 3.0.",
   "tags": ["community", "theme", "recommended"],
+  "enabledByDefault": true,
   "credits": [
     {
       "name": "Maximouse",
