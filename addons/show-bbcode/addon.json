@@ -1,5 +1,5 @@
 {
-  "name": "Show BBCode",
+  "name": "BBCode source button",
   "description": "Adds a button to the forums that shows the BBCode source of a post.",
   "tags": ["community", "forums"],
   "credits": [

@@ -1,6 +1,6 @@
 {
-  "name": "Redirect mobile forums to main forums",
-  "description": "Redirects you from /discuss/m/ to /discuss/.",
+  "name": "Redirect to standard forums",
+  "description": "Redirects you to the standard (\"main\") forums when you click a link to the mobile forums.",
   "credits": [
     {
       "name": "9gr",

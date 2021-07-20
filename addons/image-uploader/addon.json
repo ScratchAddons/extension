@@ -1,6 +1,6 @@
 {
   "name": "Forums image uploader",
-  "description": "Integrates image uploading into the forums.",
+  "description": "Adds a button to directly upload images into forum posts.",
   "credits": [
     {
       "name": "Jeffalo"

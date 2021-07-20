@@ -1,6 +1,6 @@
 {
   "name": "Do not automatically run duplicated blocks",
-  "description": "Fixes a bug in the Scratch editor, where duplicating a block and attaching it to a stack causes the stack to run.",
+  "description": "Fixes a bug in the Scratch editor, where duplicating a block and attaching it to a script causes the script to run.",
   "credits": [
     {
       "name": "lisa_wolfgang",

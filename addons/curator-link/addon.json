@@ -1,6 +1,6 @@
 {
-  "name": "Curator link",
-  "description": "Creates a clickable link for the curator of the front page.",
+  "name": "Front page curator link",
+  "description": "Makes the username of the front page curator a clickable link to their profile.",
   "credits": [
     {
       "name": "Hans5958",

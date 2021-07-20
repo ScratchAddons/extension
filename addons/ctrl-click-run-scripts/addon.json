@@ -1,6 +1,6 @@
 {
   "name": "Ctrl+Click to run scripts",
-  "description": "Only run block stacks on click if also holding the Ctrl key.",
+  "description": "Only run scripts on click if also holding the Ctrl key.",
   "info": [
     {
       "type": "notice",

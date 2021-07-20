@@ -1,6 +1,6 @@
 {
   "name": "Expandable search bar",
-  "description": "Makes the search bar on the navbar wider when it's focused.",
+  "description": "Makes the search bar in the navigation bar wider when it's focused.",
   "credits": [
     {
       "name": "CST1229",

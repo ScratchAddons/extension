@@ -1,6 +1,6 @@
 {
   "name": "Colored context menus",
-  "description": "Makes the editor context menus colorful when right-clicking a block.",
+  "description": "Makes the block context menus colorful.",
   "credits": [
     {
       "name": "GarboMuffin"

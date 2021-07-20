@@ -1,6 +1,6 @@
 {
-  "name": "Linebreaks in comments",
-  "description": "Shows the linebreaks (pressing enter) in comments.",
+  "name": "Line breaks in comments",
+  "description": "Makes line breaks (pressing Enter) in comments on the website visible instead of converting them to spaces.",
   "credits": [
     {
       "name": "TheColaber",

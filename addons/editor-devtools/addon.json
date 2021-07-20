@@ -1,6 +1,6 @@
 {
   "name": "Developer tools",
-  "description": "Adds a find box and new menu options to the editor: copy/paste blocks, better tidy up, go to custom block definition, and more!",
+  "description": "Adds a find box and new menu options to the editor: copy/paste blocks, better clean up, go to custom block definition, and more!",
   "info": [
     {
       "type": "notice",

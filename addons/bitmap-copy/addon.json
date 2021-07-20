@@ -1,6 +1,6 @@
 {
   "name": "Bitmap images copying",
-  "description": "Allows you to actually copy a bitmap image from the paint editor, so that you can paste it in other websites or software.",
+  "description": "Allows you to copy a bitmap image from the costume editor into the system clipboard, so that you can paste it in other websites or software.",
   "info": [
     {
       "type": "notice",

@@ -1,6 +1,6 @@
 {
   "name": "Messages in editor",
-  "description": "Displays your message count in the editor.",
+  "description": "Displays your message count in the editor menu bar.",
   "credits": [
     {
       "name": "TheColaber"

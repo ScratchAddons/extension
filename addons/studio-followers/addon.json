@@ -1,6 +1,6 @@
 {
   "name": "Browse followers button in studios",
-  "description": "Adds a button at the top of the \"curators\" tab in studios you manage, that lists your followers/following and lets you invite a shown user with a single click.",
+  "description": "Adds a button at the top of the \"curators\" tab in studios you manage, that lists your followers and followed users and lets you invite a shown user with a single click.",
   "credits": [
     {
       "name": "9gr",

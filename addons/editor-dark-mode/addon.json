@@ -717,13 +717,13 @@
       "default": "#202020"
     },
     {
-      "name": "Asset list background",
+      "name": "Costume/sound list background",
       "id": "selector2",
       "type": "color",
       "default": "#202020"
     },
     {
-      "name": "Selected sprite/asset background",
+      "name": "Selected sprite/costume/sound background",
       "id": "selectorSelection",
       "type": "color",
       "default": "#111111"
@@ -741,7 +741,7 @@
       "default": "#202020"
     },
     {
-      "name": "Workspace background",
+      "name": "Code area background",
       "id": "workspace",
       "type": "color",
       "default": "#151515"

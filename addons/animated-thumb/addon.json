@@ -1,6 +1,6 @@
 {
   "name": "Thumbnails setter",
-  "description": "Adds a button to the editor to set the thumbnail of your project to any image (including gifs).",
+  "description": "Adds a button to the editor menu bar to set the thumbnail of your project to any image (including gifs).",
   "info": [
     {
       "type": "notice",

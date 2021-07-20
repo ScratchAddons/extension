@@ -1,6 +1,6 @@
 {
-  "name": "Remix tree button on project pages",
-  "description": "Brings back the remix tree button to project pages.",
+  "name": "Remix tree button",
+  "description": "Brings back the remix tree button to project pages, next to the Copy Link button.",
   "tags": ["community", "recommended", "projectPage"],
   "credits": [
     {

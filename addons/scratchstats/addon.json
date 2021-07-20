@@ -1,6 +1,6 @@
 {
   "name": "Profile statistics",
-  "description": "Shows statistics from ScratchDB on profile pages.",
+  "description": "Shows statistics from ScratchDB on user profiles.",
   "tags": ["community", "profiles"],
   "credits": [
     {

@@ -1,6 +1,6 @@
 {
   "name": "Live featured project",
-  "description": "Shows interactive embed of the featured project, directly from the user's profile page. Based on the implementation on Mega Scratch Userscript.",
+  "description": "Shows an interactive featured project, directly from the user's profile. Based on the implementation in Mega Scratch Userscript.",
   "credits": [
     {
       "name": "GRA0007 (original)",

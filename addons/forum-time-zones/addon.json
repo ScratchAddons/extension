@@ -1,6 +1,6 @@
 {
-  "name": "Use local timezone on forums",
-  "description": "Converts the post dates to your time zone. Uses ScratchDB for information.",
+  "name": "Local timezone on forums",
+  "description": "Converts the post dates on the forums to use your local time zone. Uses ScratchDB for information.",
   "userscripts": [
     {
       "url": "userscript.js",

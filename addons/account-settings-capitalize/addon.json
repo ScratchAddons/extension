@@ -1,5 +1,5 @@
 {
-  "name": "Fix capitalization of Account Settings",
+  "name": "Capitalized Account Settings",
   "description": "Changes \"Account settings\" in the account menu to \"Account Settings\".",
   "userstyles": [
     {

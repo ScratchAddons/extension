@@ -1,8 +1,8 @@
 export default {
   includeScore: true,
-  location: 0,
   threshold: 0.35,
-  distance: 200,
+  ignoreLocation: true,
+  useExtendedSearch: true,
   keys: [
     {
       name: "name",

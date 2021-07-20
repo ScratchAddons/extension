@@ -1,6 +1,6 @@
 {
   "name": "Forum search",
-  "description": "Adds a post search to the forum homepage. Uses ScratchDB for information.",
+  "description": "Adds a post search to the forums. Uses ScratchDB for information.",
   "credits": [
     {
       "name": "DatOneLefty"

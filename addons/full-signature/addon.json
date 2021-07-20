@@ -1,6 +1,6 @@
 {
-  "name": "Show full areas",
-  "description": "Makes some elements with limited height resizable or scrollable, such as user signatures on the forums and What I've been doing on profiles.",
+  "name": "Full areas",
+  "description": "Shows the full content of areas with limited height, such as user signatures on the forums and What I've been doing on profiles, by making them resizable or scrollable.",
   "credits": [
     {
       "name": "GrahamSH"
