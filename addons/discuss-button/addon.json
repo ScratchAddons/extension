@@ -1,14 +1,6 @@
 {
-  "name": "Discuss button",
-  "description": "Adds the discuss button to the navbar.",
-  "credits": [
-    {
-      "name": "Maximouse"
-    },
-    {
-      "name": "World_Languages"
-    }
-  ],
+  "name": "Customizable navigation bar",
+  "description": "Choose a list of links to be displayed in the navigation bar.",
   "userscripts": [
     {
       "url": "userscript.js",
@@ -18,21 +10,30 @@
   ],
   "settings": [
     {
-      "name": "Remove \"ideas\" button",
-      "id": "removeIdeasBtn",
-      "type": "boolean",
-      "default": false
-    },
-    {
-      "name": "Discuss button name",
-      "id": "buttonName",
-      "type": "string",
-      "default": "Discuss",
-      "min": 1,
-      "max": 30
+      "name": "Items",
+      "id": "items",
+      "type": "table",
+      "default": [
+        ["Create", "/projects/editor/"],
+        ["Explore", "/explore/projects/all"],
+        ["Ideas", "/ideas"],
+        ["About", "/about"]
+      ],
+      "row": [
+        {
+          "name": "Name",
+          "id": "name",
+          "type": "string"
+        },
+        {
+          "name": "URL",
+          "id": "url",
+          "type": "string"
+        }
+      ]
     }
   ],
-  "versionAdded": "1.0.0",
-  "tags": ["community", "forums"],
+  "versionAdded": "1.17.0",
+  "tags": ["community"],
   "enabledByDefault": false
 }

@@ -112,7 +112,8 @@ img :not(.navbar, .icon-type) {
 .addon-group > span:after {
   filter: invert(1) brightness(0);
 }
-.clickeable-area:hover .btn-dropdown {
+.clickeable-area:hover .btn-dropdown,
+.addon-buttons:hover {
   background: rgba(0, 0, 0, 0.05);
 }
 

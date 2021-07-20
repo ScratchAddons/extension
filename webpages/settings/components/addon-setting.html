@@ -1,11 +1,38 @@
 <template>
   <div class="addon-setting">
     <div class="setting-label" v-html="settingsName(addon)"></div>
+    <template v-if="setting.type === 'table'">
+      <div class="setting-table">
+        <div class="setting-table-list" v-sortable>
+          <div class="setting-table-row" v-for="(i, row) of addonSettings[setting.id]">
+            <div class="setting-table-options">
+              <div class="addon-buttons" @click="deleteTableRow(i)">
+                <img class="icon-type" src="../../images/icons/close.svg" />
+              </div>
+              <div class="addon-buttons addon-buttons handle">
+                <img class="icon-type" src="../../images/icons/drag.svg" />
+              </div>
+            </div>
+            <div class="setting-table-row-settings">
+              <addon-setting
+                v-for="(id, val) of row"
+                :addon="addon"
+                :setting="getTableSetting(id)"
+                :addon-settings="row"
+              ></addon-setting>
+            </div>
+          </div>
+        </div>
+        <div class="addon-buttons setting-table-add" @click="addTableRow">
+          <img class="icon-type" src="../../images/icons/plus.svg" />
+        </div>
+      </div>
+    </template>
     <template v-if="setting.type === 'boolean'">
       <input
         type="checkbox"
         class="setting-input check"
-        v-model="addonSettings[addon._addonId][setting.id]"
+        v-model="addonSettings[setting.id]"
         @change="updateSettings()"
         :disabled="!addon._enabled"
       />
@@ -14,12 +41,10 @@
       <input
         type="number"
         class="setting-input number"
-        v-model="addonSettings[addon._addonId][setting.id]"
+        v-model="addonSettings[setting.id]"
         @change="checkValidity() || updateSettings()"
         :disabled="!addon._enabled"
         min="0"
-        :data-addon-id="addon._addonId"
-        :data-setting-id="setting.id"
         number
       />
     </template>
@@ -27,13 +52,11 @@
       <input
         type="number"
         class="setting-input number"
-        v-model="addonSettings[addon._addonId][setting.id]"
+        v-model="addonSettings[setting.id]"
         @change="checkValidity() || updateSettings()"
         :disabled="!addon._enabled"
         :min="setting.min"
         :max="setting.max"
-        :data-addon-id="addon._addonId"
-        :data-setting-id="setting.id"
         number
       />
     </template>
@@ -41,36 +64,32 @@
       <input
         type="text"
         class="setting-input string"
-        v-model="addonSettings[addon._addonId][setting.id]"
+        v-model="addonSettings[setting.id]"
         @change="checkValidity() || updateSettings()"
         :disabled="!addon._enabled"
         :placeholder="setting.default"
         :maxlength="setting.max || 100"
         :minlength="setting.min || 0"
         :required="!!setting.min"
-        :data-addon-id="addon._addonId"
-        :data-setting-id="setting.id"
       />
     </template>
     <template v-if="setting.type === 'key'">
       <input
         type="text"
         class="setting-input"
-        v-model="addonSettings[addon._addonId][setting.id]"
+        v-model="addonSettings[setting.id]"
         @input="updateSettings()"
         @keydown="keySettingKeyDown"
         @keyup="keySettingKeyUp"
         :disabled="!addon._enabled"
         :placeholder="setting.default"
         maxlength="100"
-        :data-addon-id="addon._addonId"
-        :data-setting-id="setting.id"
         spellcheck="false"
       />
     </template>
     <template v-if="setting.type === 'color'">
       <picker
-        :value="addonSettings[addon._addonId][setting.id] || setting.default"
+        :value="addonSettings[setting.id] || setting.default"
         :setting="setting"
         :addon="addon"
         :no_alpha="!setting.allowTransparency"
@@ -100,7 +119,7 @@
         <div
           class="filter-option"
           v-for="option of setting.potentialValues"
-          :class="{'sel' : addonSettings[addon._addonId][setting.id] === option.id, 'disabled': !addon._enabled}"
+          :class="{'sel' : addonSettings[setting.id] === option.id, 'disabled': !addon._enabled}"
           @click="updateOption(option.id);"
         >
           {{ option.name }}
@@ -235,5 +254,30 @@
     box-sizing: border-box;
     border-radius: 4px;
     border: 1px solid #000;
+  }
+
+  .setting-table {
+    display: flex;
+    flex-direction: column;
+  }
+  .setting-table-list {
+    display: flex;
+    flex-direction: column;
+  }
+  .setting-table-row {
+    display: flex;
+    margin: 10px 0px;
+  }
+  .setting-table-row-settings {
+    background: var(--accent-3);
+    border-radius: 10px;
+  }
+  .setting-table-options {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  .setting-table-add {
+    width: 24px;
   }
 </style>

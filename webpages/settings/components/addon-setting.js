@@ -32,12 +32,41 @@ export default async function ({ template }) {
       },
       checkValidity() {
         // Needed to get just changed input to enforce it's min, max, and integer rule if the user "manually" sets the input to a value.
-        let input = document.querySelector(
-          `input[data-addon-id='${this.addon._addonId}'][data-setting-id='${this.setting.id}']`
-        );
-        this.addonSettings[this.addon._addonId][this.setting.id] = input.validity.valid
-          ? input.value
-          : this.setting.default;
+        let input = this.$event.target;
+        this.addonSettings[this.setting.id] = input.validity.valid ? input.value : this.setting.default;
+      },
+      keySettingKeyDown(e) {
+        e.preventDefault();
+        e.target.value = e.ctrlKey
+          ? "Ctrl" +
+            (e.shiftKey ? " + Shift" : "") +
+            (e.key === "Control" || e.key === "Shift"
+              ? ""
+              : (e.ctrlKey ? " + " : "") +
+                (e.key.toUpperCase() === e.key
+                  ? e.code.includes("Digit")
+                    ? e.code.substring(5, e.code.length)
+                    : e.key
+                  : e.key.toUpperCase()))
+          : "";
+      },
+      keySettingKeyUp(e) {
+        // Ctrl by itself isn't a hotkey
+        if (e.target.value === "Ctrl") e.target.value = "";
+        this.updateOption(e.target.value);
+      },
+      getTableSetting(id) {
+        return this.setting.row.find((setting) => setting.id === id);
+      },
+      deleteTableRow(i) {
+        this.addonSettings[this.setting.id].splice(i, 1);
+        this.updateSettings();
+      },
+      addTableRow() {
+        let settings = {};
+        this.setting.row.map((column) => column.id).forEach((id) => (settings[id] = ""));
+        this.addonSettings[this.setting.id].push(settings);
+        this.updateSettings();
       },
       keySettingKeyDown(e) {
         e.preventDefault();
@@ -67,7 +96,7 @@ export default async function ({ template }) {
         this.$root.updateSettings(...params);
       },
       updateOption(newValue) {
-        this.addonSettings[this.addon._addonId][this.setting.id] = newValue;
+        this.addonSettings[this.setting.id] = newValue;
         this.updateSettings();
       },
     },
@@ -77,6 +106,19 @@ export default async function ({ template }) {
       },
       closeResetDropdowns(...params) {
         return this.$root.closeResetDropdowns(...params);
+      },
+    },
+    directives: {
+      sortable() {
+        const sortable = new window.Sortable(this.el, {
+          handle: ".handle",
+          animation: 300,
+          onUpdate: (event) => {
+            let list = this.vm.addonSettings[this.vm.setting.id];
+            list.splice(event.newIndex, 0, list.splice(event.oldIndex, 1)[0]);
+            this.vm.updateSettings();
+          },
+        });
       },
     },
   });

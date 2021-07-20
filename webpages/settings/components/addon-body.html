@@ -16,7 +16,7 @@
         <div
           v-show="expanded && addon._enabled"
           v-if="addon.settings"
-          class="clear-settings"
+          class="addon-buttons"
           title="{{ msg('resetToDefault') }}"
           @click="loadDefaults"
         >
@@ -54,7 +54,7 @@
           v-for="setting of addon.settings"
           :addon="addon"
           :setting="setting"
-          :addon-settings="addonSettings"
+          :addon-settings="addonSettings[addon._addonId]"
         ></addon-setting>
       </div>
       <div class="presets-column" v-if="addon.presets" v-bind:class="[!addon._enabled ? 'disabled' : '']">
@@ -145,14 +145,16 @@
     margin-bottom: 50px;
   }
 
-  .clear-settings {
+  .addon-buttons {
     display: flex;
     align-items: center;
+    padding-block: 8px;
     padding-inline-start: 8px;
     border-radius: 4px;
     margin-inline-end: 8px;
+    cursor: pointer;
   }
-  .clear-settings:hover {
+  .addon-buttons:hover {
     background: rgba(255, 255, 255, 0.05);
   }
 
@@ -247,6 +249,7 @@
     margin-inline-start: auto;
     padding: 5px 10px;
     display: flex;
+    align-items: center;
   }
 
   .switch {

@@ -42,7 +42,7 @@
     <link rel="icon" href="../../images/icon.png" />
 
     <!-- Preload index.js imports -->
-    <link rel="modulepreload" href="../../libraries/common/cs/download-blob.js"">
+    <link rel="modulepreload" href="../../libraries/common/cs/download-blob.js" />
     <link rel="modulepreload" href="../rtl-list.js" />
     <link rel="modulepreload" href="../../libraries/common/load-vue-components.js" />
     <link rel="modulepreload" href="../../libraries/thirdparty/fuse.basic.esm.min.js" />
@@ -107,6 +107,7 @@
     <link href="../../libraries/thirdparty/Sora.css" rel="stylesheet" />
     <script src="../../libraries/thirdparty/vue.js" defer></script>
     <script src="../../libraries/thirdparty/color-picker.js" type="module"></script>
+    <script src="../../libraries/thirdparty/sortable.min.js" type="module"></script>
     <script src="index.js" type="module"></script>
   </head>
   <body v-cloak :class="{light: theme}">
@@ -266,7 +267,7 @@
           </p>
           <p>
             <a
-              href="./licenses.html?libraries=icu-message-formatter,vue,color-picker-web-component,comlink,Sora,fuse"
+              href="./licenses.html?libraries=icu-message-formatter,vue,color-picker-web-component,comlink,Sora,fuse,sortable"
               target="_blank"
               >{{ msg("libraryCredits") }}</a
             >

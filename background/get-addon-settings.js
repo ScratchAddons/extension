@@ -7,42 +7,19 @@ chrome.storage.sync.get(["addonSettings", "addonsEnabled"], ({ addonSettings = {
       const settings = addonSettings[addonId] || {};
       let madeChangesToAddon = false;
       if (manifest.settings) {
-        if (addonId === "editor-dark-mode") {
-          // Transition v1.12.0 modes to v1.13.0 presets
+        if (addonId === "discuss-button" && typeof settings.buttonName !== "undefined") {
+          // Transition v1.16.0 modes to v1.17.0 settings
+          madeChangesToAddon = true;
+          madeAnyChanges = true;
 
-          // If user had a selected mode (AKA was a v1.12.0 user)
-          // but has no "page" color set, do the transition
-          // This will happen on first v1.13.0 run only
-          if (settings.selectedMode && !settings.page) {
-            const usePreset = (presetId) => {
-              for (const option of manifest.settings) {
-                if (option.id === "textShadow" && settings.textShadow !== undefined) {
-                  // Exception: v1.12.0 already had this setting
-                  // and we want to preserve what the user had
-                  continue;
-                }
-                const presetValue = manifest.presets.find((preset) => preset.id === presetId).values[option.id];
-                if (presetValue !== undefined) settings[option.id] = presetValue;
-                else settings[option.id] = option.default;
-              }
-            };
+          let option = manifest.settings.find((option) => option.id === "items");
+          settings.items = option.default;
+          settings.items.splice(3, 0, [settings.buttonName, "/discuss"]);
+          if (settings.removeIdeasBtn) settings.items.splice(2, 1);
 
-            const previousMode = settings.selectedMode;
-            usePreset(
-              {
-                "3-darker": "3darker",
-                "3-dark": "3dark",
-                "dark-editor": "darkEditor",
-                "experimental-dark": "experimentalDark",
-              }[previousMode] || /* Something went wrong, use 3.Darker */ "3darker"
-            );
-
-            addonSettings[addonId] = settings; // Note: IIRC this line doesn't actually do anything
-            madeAnyChanges = true;
-            console.log("Migrated editor-dark-mode to presets");
-            // Skip following code, continue with next addon
-            continue;
-          }
+          settings.items = settings.items.map((item) => ({ name: item[0], url: item[1] }));
+          delete settings.removeIdeasBtn;
+          delete settings.buttonName;
         }
 
         for (const option of manifest.settings) {
@@ -56,6 +33,13 @@ chrome.storage.sync.get(["addonSettings", "addonsEnabled"], ({ addonSettings = {
               continue;
             }
             settings[option.id] = option.default;
+            if (option.type === "table") {
+              settings[option.id] = settings[option.id].map((items) => {
+                let setting = {};
+                items.forEach((item, i) => (setting[option.row[i].name] = item));
+                return setting;
+              });
+            }
           } else if (option.type === "positive_integer" || option.type === "integer") {
             // ^ else means typeof can't be "undefined", so it must be number
             if (typeof settings[option.id] !== "number") {
@@ -72,18 +56,6 @@ chrome.storage.sync.get(["addonSettings", "addonsEnabled"], ({ addonSettings = {
       }
 
       if (addonsEnabled[addonId] === undefined) addonsEnabled[addonId] = !!manifest.enabledByDefault;
-      else if (addonId === "dango-rain") {
-        if (typeof settings.force !== "undefined") {
-          if (settings.force === false) {
-            // Note: addon might be disabled already, but we don't care
-            addonsEnabled[addonId] = false;
-            console.log("Disabled dango-rain because force was disabled");
-          }
-          delete settings.force; // Remove setting so that this only happens once
-          madeChangesToAddon = true;
-          madeAnyChanges = true;
-        }
-      }
 
       if (madeChangesToAddon) {
         console.log(`Changed settings for addon ${addonId}`);

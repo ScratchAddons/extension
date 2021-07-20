@@ -50,6 +50,15 @@ export default async function ({ template }) {
         if (window.confirm(chrome.i18n.getMessage("confirmReset"))) {
           for (const property of this.addon.settings) {
             this.$root.addonSettings[this.addon._addonId][property.id] = property.default;
+            if (property.type === "table") {
+              this.$root.addonSettings[this.addon._addonId][property.id] = this.$root.addonSettings[
+                this.addon._addonId
+              ][property.id].map((defaultValues) => {
+                let info = {};
+                defaultValues.forEach((defaultValue, i) => (info[property.row[i].id] = defaultValue));
+                return info;
+              });
+            }
           }
           this.$root.updateSettings(this.addon);
           console.log(`Loaded default values for ${this.addon._addonId}`);
