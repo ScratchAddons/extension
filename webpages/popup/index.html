@@ -7,11 +7,12 @@
     <style>
       @import url("../styles/components/tooltips.css");
       @import url("../styles/colors.css");
+      @import url("../styles/components/popup.css");
     </style>
     <link rel="stylesheet" href="style.css" />
     <link href="../../libraries/thirdparty/Sora.css" rel="stylesheet" />
     <script src="../../libraries/thirdparty/vue.js" defer></script>
-    <script src="./index.js" defer></script>
+    <script src="./index.js" type="module"></script>
     <link rel="preload" href="light.css" as="style" />
   </head>
   <body class="loading">
@@ -50,7 +51,7 @@
             <a
               v-if="popup.fullscreen"
               class="popout"
-              href="../../popups/{{ popup._addonId }}/popup.html"
+              href="fullscreen.html?{{ popup._addonId }}"
               target="_blank"
               @click="closePopup()"
             >
@@ -59,12 +60,9 @@
           </div>
         </div>
       </div>
-      <iframe
-        v-for="popup in popupsWithIframes"
-        v-show="currentPopup === popup"
-        :src="iframeSrc(popup._addonId)"
-        :key="popup._addonId"
-      ></iframe>
+      <div v-for="popup in displayedPopups" v-show="currentPopup === popup" class="popup-container">
+        <component :is="popup._addonId"></component>
+      </div>
     </div>
   </body>
 </html>

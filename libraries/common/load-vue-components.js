@@ -8,6 +8,8 @@ const styles = {};
 export default (filenames) =>
   Promise.all(
     filenames.map((filename) => {
+      let params = filename.params || {};
+      filename = filename.url || filename;
       const htmlUrl = chrome.runtime.getURL(`${filename}.html`);
       const jsUrl = chrome.runtime.getURL(`${filename}.js`);
       const jsPromise = import(jsUrl);
@@ -15,7 +17,14 @@ export default (filenames) =>
         .then((resp) => resp.text())
         .then((text) => {
           const dom = new DOMParser().parseFromString(text, "text/html");
-          const css = dom.querySelector("style")?.textContent;
+
+          styles[filename] = {};
+          const lightCss = dom.querySelector("style[light]")?.textContent;
+          if (lightCss) {
+            styles[filename].light = lightCss;
+          }
+
+          const css = dom.querySelector("style:not([light])")?.textContent;
           if (css) {
             if (chrome.runtime.getManifest().version_name.includes("-prerelease")) {
               const normalizedCss = css.replace("\n", "").trimEnd();
@@ -26,22 +35,47 @@ export default (filenames) =>
                 0: "/*",
                 [linesToAdd - 1]: "<style> */",
               }).join("\n");
-              styles[filename] = `${newLines}\n${normalizedCss}/* \n</style> */\n/*# sourceURL=${htmlUrl} */`;
+              styles[filename].style = `${newLines}\n${normalizedCss}/* \n</style> */\n/*# sourceURL=${htmlUrl} */`;
             } else {
-              styles[filename] = css;
+              styles[filename].style = css;
             }
           }
           return dom.querySelector("template").innerHTML;
         })
-        .then((template) => jsPromise.then((esm) => esm.default({ template })));
+        .then((template) => jsPromise.then((esm) => esm.default({ template, ...params })));
     })
-  ).then(() =>
+  ).then((components) => {
+    let all = {};
+    chrome.storage.sync.get(["globalTheme"], function (r) {
+      if (r.globalTheme) {
+        filenames.forEach((filename) => {
+          filename = filename.url || filename;
+          if (!styles[filename].light) return;
+          const style = document.createElement("style");
+          style.textContent = styles[filename].light;
+          const [componentName] = filename.split("/").slice(-1);
+          style.setAttribute("data-vue-component", componentName); // For debugging (has no side effects)
+          if (filename.startsWith("popups/")) {
+            const [addonId] = filename.split("/").slice(1);
+            style.setAttribute("data-addon-id", addonId);
+          }
+          document.head.appendChild(style);
+        });
+      }
+    });
     filenames.forEach((filename) => {
-      if (!styles[filename]) return;
+      filename = filename.url || filename;
+      if (!styles[filename].style) return;
       const style = document.createElement("style");
-      style.textContent = styles[filename];
+      style.textContent = styles[filename].style;
       const [componentName] = filename.split("/").slice(-1);
       style.setAttribute("data-vue-component", componentName); // For debugging (has no side effects)
+      if (filename.startsWith("popups/")) {
+        const [addonId] = filename.split("/").slice(1);
+        style.setAttribute("data-addon-id", addonId);
+      }
       document.head.insertBefore(style, document.head.querySelector("[data-below-vue-components]"));
-    })
-  );
+    });
+    components.forEach((component) => (all = { ...all, ...component }));
+    return all;
+  });

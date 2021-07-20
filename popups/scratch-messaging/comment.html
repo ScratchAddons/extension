@@ -1,0 +1,167 @@
+<template>
+  <div
+    class="comment"
+    :class="{'child-comment': !isParent, 'unread': unread, 'comment-me' : thisComment.author === username}"
+  >
+    <a
+      class="comment-author nolink"
+      rel="noopener noreferrer"
+      target="_blank"
+      href="https://scratch.mit.edu/users/{{ thisComment.author }}/"
+      >{{ thisComment.author }}</a
+    >{{ thisComment.scratchTeam ? "*" : "" }}
+    <span class="comment-time" v-show="deleteStep !== 1 && !deleted">
+      · {{ commentTimeAgo }}&nbsp;&nbsp;
+      <a rel="noopener noreferrer" target="_blank" :href="commentURL">
+        <img src="../../images/icons/popout.svg" class="popout-comment" title="{{ messages.openNewTabMsg }}" />
+      </a>
+    </span>
+    <a @click="deleteComment()" class="delete-btn" :class="{'bold': deleteStep === 1}" v-show="!deleted"
+      >{{ deleteStep === 0 ? messages.deleteMsg : messages.deleteConfirmMsg }}
+    </a>
+    <bdo dir="ltr">
+      <!-- prevents LTR comments from being messed up in RTL layout - not ideal, but consistent with Scratch -->
+      <div class="comment-content" :class="{'comment-self' : thisComment.author === username}">
+        <span class="comment-content-text">{{{ thisComment.content }}}</span>
+        <a
+          class="reply-button-comment"
+          @click="replying = true"
+          :class="{'replying': replying}"
+          :style="{'visibility': replying ? 'hidden' : 'visible'}"
+          v-show="!deleted"
+          >{{ messages.replyMsg }}</a
+        >
+      </div>
+    </bdo>
+    <div class="reply-box-comment" v-show="replying">
+      <textarea class="reply-textarea" maxlength="500" v-model="replyBoxValue"></textarea>
+      <div class="reply-box-buttons">
+        <button @click="!postingComment && postComment()" style="background-color: #4d97ff">
+          {{ postingComment ? messages.postingMsg : messages.postMsg }}
+        </button>
+        <button @click="replying = false" style="background-color: gray" v-show="!postingComment">
+          {{ messages.cancelMsg }}
+        </button>
+        <span class="comment-chars"> {{ replyBoxLeftMsg }}</span>
+      </div>
+    </div>
+  </div>
+</template>
+
+<style>
+  .comment {
+    padding: 3px 8px;
+    background: #222222;
+    border: 1px solid #000;
+    border-radius: 8px;
+    margin: 8px;
+    font-size: 12px;
+  }
+  .comment.st-alert {
+    padding: 10px;
+  }
+  .comment.unread,
+  .unread .comment {
+    background-color: #000;
+  }
+  .comment-content {
+    word-break: break-word;
+    clip-path: inset(0 0 0 0); /* keep zalgo in this box */
+  }
+  .comment-content-text {
+    margin-right: 10px;
+  }
+  .comment-content-text:after {
+    /* So that empty comments take up a line */
+    content: "\200b";
+  }
+  .comment-author {
+    font-weight: 600;
+    color: #d84a27;
+  }
+  .comment-me .comment-author {
+    font-weight: 700;
+    color: green;
+  }
+  .unread .comment-author {
+    font-weight: 700;
+  }
+  .comment-time {
+    /*font-weight: 200;*/
+    opacity: 0.5;
+  }
+  .popout-comment {
+    cursor: pointer;
+    height: 10px;
+    vertical-align: text-top;
+    filter: brightness(100);
+  }
+  [dir="rtl"] .popout-comment {
+    transform: scaleX(-1);
+  }
+  .delete-btn {
+    float: right;
+    opacity: 0;
+    color: gray;
+    font-size: 0.65rem;
+    padding-top: 2px;
+  }
+  .bold {
+    font-weight: bold;
+    color: red;
+  }
+  .child-comment {
+    /*padding-left: 4px;*/
+    /*margin-left: 24px;*/
+    /*border-top: 1px dashed gray;*/
+    margin-inline-start: 3em;
+  }
+  .unread {
+    /*border-left: 3px solid #0f8bc0;*/
+    font-weight: 500;
+  }
+  .reply-button-comment {
+    opacity: 0;
+    color: #0f8bc0;
+    font-weight: bold;
+    user-select: none;
+  }
+  .comment:hover .reply-button-comment,
+  .comment:hover .delete-btn {
+    opacity: 1;
+  }
+  .reply-textarea {
+    width: 100%;
+    box-sizing: border-box;
+    height: 5rem;
+    font-family: Arial;
+    padding: 8px;
+    resize: vertical;
+    margin-top: 8px;
+    font-size: 12px;
+    border-radius: 8px;
+    border: 2px solid rgba(0, 0, 0, 0.2);
+    background-color: #222222;
+    color: white;
+  }
+  .reply-box-buttons {
+    padding-inline-end: 4px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .reply-box-buttons > button {
+    border-radius: 0.25rem;
+    border: 1px solid black;
+    color: white;
+    font-weight: bold;
+    padding: 8px;
+    outline: none;
+    margin-inline-end: 4px;
+    cursor: pointer;
+  }
+  .comment-chars {
+    margin-inline-start: auto;
+    font-weight: normal;
+  }
+</style>

@@ -1,3 +1,6 @@
+import loadVueComponent from "../../libraries/common/load-vue-components.js";
+import loadPopup from "../popup-loader.js";
+
 //theme switching
 const lightThemeLink = document.createElement("link");
 lightThemeLink.setAttribute("rel", "stylesheet");
@@ -24,46 +27,7 @@ function calculatePopupSize() {
 
 window.addEventListener("load", () => setTimeout(calculatePopupSize, 0));
 
-const vue = new Vue({
-  el: "body",
-  data: {
-    popups: [],
-    currentPopup: null,
-    popupsWithIframes: [],
-    version: chrome.runtime.getManifest().version,
-  },
-  methods: {
-    msg(message, ...params) {
-      return chrome.i18n.getMessage(message, ...params);
-    },
-    direction() {
-      return chrome.i18n.getMessage("@@bidi_dir");
-    },
-    closePopup() {
-      setTimeout(() => window.close(), 100);
-    },
-    openSettingsPage() {
-      chrome.runtime.openOptionsPage();
-      this.closePopup();
-    },
-    openChangelog() {
-      window.open("https://scratchaddons.com/changelog?versionname=" + chrome.runtime.getManifest().version_name);
-      this.closePopup();
-    },
-    setPopup(popup) {
-      if (this.currentPopup !== popup) {
-        this.currentPopup = popup;
-        if (!this.popupsWithIframes.includes(popup)) this.popupsWithIframes.push(popup);
-        setTimeout(() => document.querySelector("iframe:not([style='display: none;'])").focus(), 0);
-      }
-    },
-    iframeSrc(addonId) {
-      return vue.popups.find((addon) => addon._addonId === addonId).html;
-    },
-  },
-});
-
-chrome.runtime.sendMessage("getSettingsInfo", (res) => {
+chrome.runtime.sendMessage("getSettingsInfo", async (res) => {
   // If order unspecified, addon goes first. All new popups should be added here.
   const TAB_ORDER = ["scratch-messaging", "cloud-games"];
   const popupObjects = Object.keys(res.addonsEnabled)
@@ -77,17 +41,69 @@ chrome.runtime.sendMessage("getSettingsInfo", (res) => {
       ({ addonId, manifest }) =>
         (manifest.popup._addonId = addonId) &&
         Object.assign(manifest.popup, {
-          html: `../../popups/${addonId}/${manifest.popup.html}`,
+          html: `popups/${addonId}/popup`,
         })
     );
   popupObjects.push({
     name: chrome.i18n.getMessage("quickSettings"),
     icon: "../../images/icons/wrench.svg",
-    html: "../settings/index.html",
-    _addonId: "__settings__",
+    html: "webpages/settings/component",
+    _addonId: "settings-page",
   });
-  vue.popups = popupObjects;
-  vue.setPopup(vue.popups[0]);
+  let components = [];
+  for (let popup of popupObjects) {
+    let params = popup._addonId === "settings-page" ? [] : await loadPopup(popup._addonId);
+    components.push({ url: popup.html, params });
+  }
+  components = await loadVueComponent(components);
+  console.log(components);
+
+  const vue = new Vue({
+    el: "body",
+    components,
+    data: {
+      popups: popupObjects,
+      currentPopup: null,
+      displayedPopups: [],
+      version: chrome.runtime.getManifest().version,
+    },
+    methods: {
+      msg(message, ...params) {
+        return chrome.i18n.getMessage(message, ...params);
+      },
+      direction() {
+        return chrome.i18n.getMessage("@@bidi_dir");
+      },
+      closePopup() {
+        setTimeout(() => window.close(), 100);
+      },
+      openSettingsPage() {
+        chrome.runtime.openOptionsPage();
+        this.closePopup();
+      },
+      openChangelog() {
+        window.open("https://scratchaddons.com/changelog?versionname=" + chrome.runtime.getManifest().version_name);
+        this.closePopup();
+      },
+      setPopup(popup) {
+        if (this.currentPopup !== popup) {
+          this.currentPopup = popup;
+          if (!this.displayedPopups.includes(popup)) this.displayedPopups.push(popup);
+          for (let activeStyle of document.querySelectorAll(`style[data-addon-id=${popup._addonId}]`)) {
+            activeStyle.removeAttribute("media");
+          }
+          for (let inactiveStyle of document.querySelectorAll(
+            `style[data-addon-id]:not([data-addon-id=${popup._addonId}])`
+          )) {
+            inactiveStyle.media = "not all";
+          }
+        }
+      },
+    },
+    created() {
+      this.setPopup(this.popups[0]);
+    },
+  });
 });
 
 chrome.runtime.sendMessage("checkPermissions");

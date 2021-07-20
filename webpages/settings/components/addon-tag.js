@@ -26,5 +26,5 @@ export default async function ({ template }) {
       },
     },
   });
-  Vue.component("addon-tag", AddonTag);
+  return { "addon-tag": AddonTag };
 }

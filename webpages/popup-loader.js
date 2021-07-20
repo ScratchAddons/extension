@@ -18,8 +18,7 @@ scratchAddons._pending = {
 scratchAddons.l10n = new WebsiteLocalizationProvider();
 scratchAddons.isLightMode = false;
 
-(async () => {
-  const addonId = location.pathname.split("/")[2];
+export default async function (addonId) {
   const promisify =
     (callbackFn) =>
     (...args) =>
@@ -27,9 +26,7 @@ scratchAddons.isLightMode = false;
 
   const sendMessage = promisify(chrome.runtime.sendMessage.bind(chrome.runtime));
   const popupData = await sendMessage({
-    requestPopupInfo: {
-      addonId,
-    },
+    requestPopupInfo: { addonId },
   });
   scratchAddons.globalState = {
     auth: popupData.auth,
@@ -79,23 +76,18 @@ scratchAddons.isLightMode = false;
   const addon = new Addon({
     id: addonId,
   });
-  const globalObj = Object.create(null);
   await scratchAddons.l10n.loadByAddonId(addonId);
   const msg = (key, placeholders) =>
     scratchAddons.l10n.get(key.startsWith("/") ? key.slice(1) : `${addonId}/${key}`, placeholders);
   msg.locale = scratchAddons.l10n.locale;
 
-  const fileName = popupData.popup.script;
-  const module = await import(chrome.runtime.getURL(`/popups/${addonId}/${fileName}`));
-  module.default({
-    addon: addon,
-    global: globalObj,
-    console,
+  return {
+    addon,
     msg,
     safeMsg: (key, placeholders) =>
       scratchAddons.l10n.escaped(key.startsWith("/") ? key.slice(1) : `${addonId}/${key}`, placeholders),
-  });
-})();
+  };
+}
 
 const lightThemeLink = document.createElement("link");
 lightThemeLink.setAttribute("rel", "stylesheet");

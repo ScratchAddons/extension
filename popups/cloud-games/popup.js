@@ -1,16 +1,20 @@
-export default async ({ addon, msg, safeMsg }) => {
+export default async ({ template, addon, msg, safeMsg }) => {
   // TODO: support setting this via settings page
   const url = "https://scratch.mit.edu/studios/539952/";
   const studioId = url.match(/\d+/)?.[0];
   const shouldFailEarly = !studioId || isNaN(studioId);
-  window.vue = new Vue({
-    el: "body",
-    data: {
-      projects: [],
-      loaded: false,
-      messages: { noUsersMsg: msg("no-users") },
-      projectsChecked: 0,
-      error: shouldFailEarly ? "general-error" : null,
+
+  const CloudGames = Vue.extend({
+    props: [],
+    template,
+    data() {
+      return {
+        projects: [],
+        loaded: false,
+        messages: { noUsersMsg: msg("no-users") },
+        projectsChecked: 0,
+        error: shouldFailEarly ? "general-error" : null,
+      };
     },
     computed: {
       projectsSorted() {
@@ -93,4 +97,5 @@ export default async ({ addon, msg, safeMsg }) => {
       await Promise.all(this.projects.map((project, i) => this.setCloudDataForProject(project, i)));
     },
   });
+  return { "cloud-games": CloudGames };
 };

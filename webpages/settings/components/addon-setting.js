@@ -80,5 +80,5 @@ export default async function ({ template }) {
       },
     },
   });
-  Vue.component("addon-setting", AddonSetting);
+  return { "addon-setting": AddonSetting };
 }

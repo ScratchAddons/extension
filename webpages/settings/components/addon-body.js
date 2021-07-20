@@ -1,9 +1,17 @@
+import loadVueComponent from "../../../libraries/common/load-vue-components.js";
+
 const isIframe = window.parent !== window;
 
 export default async function ({ template }) {
+  let components = await loadVueComponent([
+    "webpages/settings/components/addon-setting",
+    "webpages/settings/components/addon-tag",
+  ]);
+
   const AddonBody = Vue.extend({
     props: ["addon", "groupId", "groupExpanded", "visible"],
     template,
+    components,
     data() {
       return {
         expanded: this.getDefaultExpanded(),
@@ -120,5 +128,5 @@ export default async function ({ template }) {
       },
     },
   });
-  Vue.component("addon-body", AddonBody);
+  return { "addon-body": AddonBody };
 }

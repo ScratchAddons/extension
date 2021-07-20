@@ -1,37 +1,27 @@
-@import url("/libraries/thirdparty/Sora.css");
-html {
-  font-size: 12px;
-  height: 100%;
+.popup-container {
+  height: calc(100% - 45px);
+  overflow-y: auto;
   scrollbar-width: thin;
   scrollbar-color: grey transparent;
-  color: #dddddd;
+  color: white;
 }
-html.fullscreen {
-  font-size: 15px;
-}
-
-body {
-  margin: 0 auto;
-  font-family: "Sora", sans-serif;
-  width: auto;
-  overflow-x: hidden;
-  background-color: #222;
-}
-
-body.fullscreen {
+.popup-container.fullscreen {
   width: 55%;
+  margin: auto;
   min-height: calc(100% - 2px);
   height: auto;
   border: 1px solid black;
+  font-family: Sora, sans-serif;
   box-shadow: 0 -1px 7px rgba(0, 0, 0, 0.2);
 }
-a {
+
+.popup-container a {
   cursor: pointer;
   text-decoration: none;
 }
-a[href]:not(.nolink) {
+.popup-container a[href]:not(.nolink) {
   color: #1aa0d8;
 }
-a:hover {
+.popup-container a:hover {
   text-decoration: underline;
 }

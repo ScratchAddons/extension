@@ -80,5 +80,5 @@ export default async function ({ template }) {
       },
     },
   });
-  Vue.component("picker", ColorInput);
+  return { picker: ColorInput };
 }

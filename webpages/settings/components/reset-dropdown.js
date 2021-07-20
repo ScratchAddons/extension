@@ -35,5 +35,5 @@ export default async function ({ template }) {
       },
     },
   });
-  Vue.component("reset-dropdown", ResetDropdown);
+  return { "reset-dropdown": ResetDropdown };
 }

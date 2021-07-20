@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <script src="../set-lang.js" type="module"></script>
+    <script src="../check-unsupported.js" defer></script>
+    <style>
+      @import url("../styles/components/tooltips.css");
+      @import url("../styles/colors.css");
+      @import url("../styles/components/popup.css");
+
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        background-color: var(--accent-2);
+        font-size: 15px;
+      }
+    </style>
+    <link href="../../libraries/thirdparty/Sora.css" rel="stylesheet" />
+    <script src="../../libraries/thirdparty/vue.js" defer></script>
+    <script src="./fullscreen.js" type="module"></script>
+  </head>
+  <body>
+    <div class="popup-container fullscreen">
+      <component :is="addonId"></component>
+    </div>
+  </body>
+</html>

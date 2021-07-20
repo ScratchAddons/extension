@@ -20,5 +20,5 @@ export default async function ({ template }) {
       },
     },
   });
-  Vue.component("addon-group-header", AddonGroup);
+  return { "addon-group-header": AddonGroup };
 }

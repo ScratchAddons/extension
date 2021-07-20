@@ -1,407 +1,583 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title></title>
-    <link rel="stylesheet" href="popup.css" />
-    <script src="../../libraries/thirdparty/vue.js" defer></script>
-    <link rel="preload" href="light.css" as="style" />
-    <script src="../../webpages/popup-loader.js" type="module"></script>
-    <style>
-      @import url("../../webpages/styles/components/tooltips.css");
-      @import url("../../webpages/styles/components/popup.css");
-    </style>
-    <base target="_blank" />
+<template>
+  <div class="contents">
+    <div v-show="!error">
+      <!-- Scratch Team Messages -->
+      <div class="message-type" v-show="stMessages.length" style="border-color: #ff7b26">
+        <div
+          class="message-type-title hover-reverse"
+          @click="messageTypeExtended.stMessages = !messageTypeExtended.stMessages"
+        >
+          <div class="btn-dropdown">
+            <img src="../../images/icons/expand.svg" alt="v" :class="{'reverted': messageTypeExtended.stMessages}" />
+          </div>
+          <span class="message-type-title-text">{{ uiMessages.stMessagesMsg }}</span>
+          <span class="float-right"
+            ><img class="small-icon inverted" src="../../images/icons/notice.svg" /> {{ stMessages.length }}</span
+          >
+        </div>
+        <div class="message-type-details" v-show="messageTypeExtended.stMessages">
+          <div class="comment st-alert" v-for="alert of stMessages">
+            <span class="comment-time">{{ alert.datetime_created }}</span>
+            <a class="delete-btn" @click="dismissAlert(alert.id)">{{ uiMessages.dismissMsg }}</a>
+            <div v-html="alert.message"></div>
+          </div>
+        </div>
+      </div>
 
-    <!-- <comment> element template -->
-    <template id="comment-component">
+      <!-- Follows -->
+      <div class="message-type" v-show="follows.length">
+        <div
+          class="message-type-title hover-reverse"
+          @click="messageTypeExtended.follows = !messageTypeExtended.follows"
+        >
+          <div class="btn-dropdown">
+            <img src="../../images/icons/expand.svg" alt="v" :class="{'reverted': messageTypeExtended.follows}" />
+          </div>
+          <span class="message-type-title-text">{{ uiMessages.followsMsg }}</span>
+          <span class="float-right"
+            ><img class="small-icon" src="../../images/icons/follow.svg" /> {{ follows.length }}</span
+          >
+        </div>
+        <div class="message-type-details" v-show="messageTypeExtended.follows">
+          <div class="username-list">
+            <a v-for="follower of follows" href="https://scratch.mit.edu/users/{{ follower }}/">{{follower}}</a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Studio invites -->
+      <div class="message-type" v-show="studioInvites.length">
+        <div
+          class="message-type-title hover-reverse"
+          @click="messageTypeExtended.studioInvites = !messageTypeExtended.studioInvites"
+        >
+          <div class="btn-dropdown">
+            <img src="../../images/icons/expand.svg" alt="v" :class="{'reverted': messageTypeExtended.studioInvites}" />
+          </div>
+          <span class="message-type-title-text">{{ uiMessages.studioInvitesMsg }}</span>
+          <span class="float-right"
+            ><img class="small-icon" src="../../images/icons/studio-add.svg" /> {{ studioInvites.length }}</span
+          >
+        </div>
+        <div class="message-type-details" v-show="messageTypeExtended.studioInvites">
+          <div class="thread-list" v-for="invite of studioInvites">{{{ studioInviteHTML(invite) }}}</div>
+        </div>
+      </div>
+
+      <!-- Studio promotions -->
+      <div class="message-type" v-show="studioPromotions.length">
+        <div
+          class="message-type-title hover-reverse"
+          @click="messageTypeExtended.studioPromotions = !messageTypeExtended.studioPromotions"
+        >
+          <div class="btn-dropdown">
+            <img
+              src="../../images/icons/expand.svg"
+              alt="v"
+              :class="{'reverted': messageTypeExtended.studioPromotions}"
+            />
+          </div>
+          <span class="message-type-title-text">{{ uiMessages.studioPromotionsMsg }}</span>
+          <span class="float-right"
+            ><img class="small-icon" src="../../images/icons/adminusers.svg" /> {{ studioPromotions.length }}</span
+          >
+        </div>
+        <div class="message-type-details" v-show="messageTypeExtended.studioPromotions">
+          <div class="thread-list" v-for="promotion of studioPromotions">{{{ studioPromotionHTML(promotion) }}}</div>
+        </div>
+      </div>
+
+      <!-- Forum activity -->
+      <div class="message-type" v-show="forumActivity.length">
+        <div
+          class="message-type-title hover-reverse"
+          @click="messageTypeExtended.forumActivity = !messageTypeExtended.forumActivity"
+        >
+          <div class="btn-dropdown">
+            <img
+              src="../../../images/icons/expand.svg"
+              alt="v"
+              :class="{'reverted': messageTypeExtended.forumActivity}"
+            />
+          </div>
+          <span class="message-type-title-text">{{ uiMessages.forumMsg }}</span>
+          <span class="float-right"
+            ><img class="small-icon" src="../../images/icons/forum.svg" /> {{ forumActivity.length }}</span
+          >
+        </div>
+        <div class="message-type-details" v-show="messageTypeExtended.forumActivity">
+          <div class="thread-list" v-for="forumTopic of forumActivity">{{{ forumHTML(forumTopic) }}}</div>
+        </div>
+      </div>
+
+      <!-- Studio activity -->
+      <div class="message-type" v-show="studioActivity.length">
+        <div
+          class="message-type-title hover-reverse"
+          @click="messageTypeExtended.studioActivity = !messageTypeExtended.studioActivity"
+        >
+          <div class="btn-dropdown">
+            <img
+              src="../../images/icons/expand.svg"
+              alt="v"
+              :class="{'reverted': messageTypeExtended.studioActivity}"
+            />
+          </div>
+          <span class="message-type-title-text">{{ uiMessages.studioActivityMsg }}</span>
+          <span class="float-right"
+            ><img class="small-icon" src="../../images/icons/studio.svg" /> {{ studioActivity.length }}</span
+          >
+        </div>
+        <div class="message-type-details" v-show="messageTypeExtended.studioActivity">
+          <div class="thread-list" v-for="studio of studioActivity">{{{ studioActivityHTML(studio) }}}</div>
+        </div>
+      </div>
+
+      <!-- Remixes -->
+      <div class="message-type" v-show="remixes.length">
+        <div
+          class="message-type-title hover-reverse"
+          @click="messageTypeExtended.remixes = !messageTypeExtended.remixes"
+        >
+          <div class="btn-dropdown">
+            <img src="../../images/icons/expand.svg" alt="v" :class="{'reverted': messageTypeExtended.remixes}" />
+          </div>
+          <span class="message-type-title-text">{{ uiMessages.remixesMsg }}</span>
+          <span class="float-right"
+            ><img class="small-icon" src="../../images/icons/remix.svg" /> {{ remixes.length }}</span
+          >
+        </div>
+        <div class="message-type-details" v-show="messageTypeExtended.remixes">
+          <div v-for="remix of remixes" class="thread-list">{{{ remixHTML(remix) }}}</div>
+        </div>
+      </div>
+
+      <!-- Profiles -->
       <div
-        class="comment"
-        :class="{'child-comment': !isParent, 'unread': unread, 'comment-me' : thisComment.author === username}"
+        class="message-type"
+        v-for="profile of profilesOrdered"
+        v-show="profile.unreadComments && profile.loadedComments"
       >
-        <a
-          class="comment-author nolink"
-          rel="noopener noreferrer"
-          target="_blank"
-          href="https://scratch.mit.edu/users/{{ thisComment.author }}/"
-          >{{ thisComment.author }}</a
-        >{{ thisComment.scratchTeam ? "*" : "" }}
-        <span class="comment-time" v-show="deleteStep !== 1 && !deleted">
-          · {{ commentTimeAgo }}&nbsp;&nbsp;
-          <a rel="noopener noreferrer" target="_blank" :href="commentURL">
-            <img src="../../images/icons/popout.svg" class="popout-comment" title="{{ messages.openNewTabMsg }}" />
+        <div class="message-type-title">
+          <a
+            class="message-type-title-text nolink"
+            rel="noreferrer noopener"
+            target="_blank"
+            href="https://scratch.mit.edu/users/{{ profile.username }}/"
+          >
+            <span v-if="profile.username === username">{{ uiMessages.yourProfileMsg }}</span>
+            <span v-else>{{ othersProfile(profile.username) }}</span>
           </a>
-        </span>
-        <a @click="deleteComment()" class="delete-btn" :class="{'bold': deleteStep === 1}" v-show="!deleted"
-          >{{ deleteStep === 0 ? messages.deleteMsg : messages.deleteConfirmMsg }}
-        </a>
-        <bdo dir="ltr">
-          <!-- prevents LTR comments from being messed up in RTL layout - not ideal, but consistent with Scratch -->
-          <div class="comment-content" :class="{'comment-self' : thisComment.author === username}">
-            <span class="comment-content-text">{{{ thisComment.content }}}</span>
-            <a
-              class="reply-button-comment"
-              @click="replying = true"
-              :class="{'replying': replying}"
-              :style="{'visibility': replying ? 'hidden' : 'visible'}"
-              v-show="!deleted"
-              >{{ messages.replyMsg }}</a
+          <span class="float-right">
+            <span v-show="profile.unreadComments"
+              ><img class="small-icon" src="../../images/icons/comment.svg" /> {{profile.unreadComments}}</span
             >
-          </div>
-        </bdo>
-        <div class="reply-box-comment" v-show="replying">
-          <textarea class="reply-textarea" maxlength="500" v-model="replyBoxValue"></textarea>
-          <div class="reply-box-buttons">
-            <button @click="!postingComment && postComment()" style="background-color: #4d97ff">
-              {{ postingComment ? messages.postingMsg : messages.postMsg }}
-            </button>
-            <button @click="replying = false" style="background-color: gray" v-show="!postingComment">
-              {{ messages.cancelMsg }}
-            </button>
-            <span class="comment-chars"> {{ replyBoxLeftMsg }}</span>
+          </span>
+        </div>
+        <div class="message-type-details" v-show="profile.commentChains.length">
+          <div
+            class="comment-chain"
+            v-for="parentCommentId of profile.commentChains"
+            :class="{'unread': isCommentUnread(parentCommentId) }"
+          >
+            <comment
+              :comment-id="parentCommentId"
+              :comments-obj="comments"
+              :is-parent="true"
+              :unread="false"
+              resource-type="user"
+              :resource-id="profile.username"
+            ></comment>
+            <comment
+              v-for="childCommentId of comments[parentCommentId].children"
+              :comment-id="childCommentId"
+              :comments-obj="comments"
+              :is-parent="false"
+              :unread="isCommentUnread(childCommentId)"
+              resource-type="user"
+              :resource-id="profile.username"
+            ></comment>
           </div>
         </div>
       </div>
-    </template>
-  </head>
-
-  <body style="display: none" v-show="mounted">
-    <div class="contents">
-      <div v-show="!error">
-        <!-- Scratch Team Messages -->
-        <div class="message-type" v-show="stMessages.length" style="border-color: #ff7b26">
-          <div
-            class="message-type-title hover-reverse"
-            @click="messageTypeExtended.stMessages = !messageTypeExtended.stMessages"
+      <!-- Studios -->
+      <div class="message-type" v-for="studio of studios" v-show="studio.unreadComments && studio.loadedComments">
+        <div class="message-type-title">
+          <a
+            class="message-type-title-text nolink"
+            rel="noopener noreferrer"
+            target="_blank"
+            href="https://scratch.mit.edu/studios/{{ studio.id }}/"
+            >{{ studioText(studio.title) }}</a
           >
-            <div class="btn-dropdown">
-              <img src="../../images/icons/expand.svg" alt="v" :class="{'reverted': messageTypeExtended.stMessages}" />
-            </div>
-            <span class="message-type-title-text">{{ uiMessages.stMessagesMsg }}</span>
-            <span class="float-right"
-              ><img class="small-icon inverted" src="../../images/icons/notice.svg" /> {{ stMessages.length }}</span
+          <span class="float-right">
+            <span v-show="studio.unreadComments"
+              ><img class="small-icon" src="../../images/icons/comment.svg" /> {{studio.unreadComments}}</span
             >
-          </div>
-          <div class="message-type-details" v-show="messageTypeExtended.stMessages">
-            <div class="comment st-alert" v-for="alert of stMessages">
-              <span class="comment-time">{{ alert.datetime_created }}</span>
-              <a class="delete-btn" @click="dismissAlert(alert.id)">{{ uiMessages.dismissMsg }}</a>
-              <div v-html="alert.message"></div>
-            </div>
-          </div>
+          </span>
         </div>
-
-        <!-- Follows -->
-        <div class="message-type" v-show="follows.length">
+        <div class="message-type-details" v-show="studio.commentChains.length">
           <div
-            class="message-type-title hover-reverse"
-            @click="messageTypeExtended.follows = !messageTypeExtended.follows"
+            class="comment-chain"
+            v-for="parentCommentId of studio.commentChains"
+            :class="{'unread': isCommentUnread(parentCommentId) }"
           >
-            <div class="btn-dropdown">
-              <img src="../../images/icons/expand.svg" alt="v" :class="{'reverted': messageTypeExtended.follows}" />
-            </div>
-            <span class="message-type-title-text">{{ uiMessages.followsMsg }}</span>
-            <span class="float-right"
-              ><img class="small-icon" src="../../images/icons/follow.svg" /> {{ follows.length }}</span
-            >
-          </div>
-          <div class="message-type-details" v-show="messageTypeExtended.follows">
-            <div class="username-list">
-              <a v-for="follower of follows" href="https://scratch.mit.edu/users/{{ follower }}/">{{follower}}</a>
-            </div>
-          </div>
-        </div>
-
-        <!-- Studio invites -->
-        <div class="message-type" v-show="studioInvites.length">
-          <div
-            class="message-type-title hover-reverse"
-            @click="messageTypeExtended.studioInvites = !messageTypeExtended.studioInvites"
-          >
-            <div class="btn-dropdown">
-              <img
-                src="../../images/icons/expand.svg"
-                alt="v"
-                :class="{'reverted': messageTypeExtended.studioInvites}"
-              />
-            </div>
-            <span class="message-type-title-text">{{ uiMessages.studioInvitesMsg }}</span>
-            <span class="float-right"
-              ><img class="small-icon" src="../../images/icons/studio-add.svg" /> {{ studioInvites.length }}</span
-            >
-          </div>
-          <div class="message-type-details" v-show="messageTypeExtended.studioInvites">
-            <div class="thread-list" v-for="invite of studioInvites">{{{ studioInviteHTML(invite) }}}</div>
-          </div>
-        </div>
-
-        <!-- Studio promotions -->
-        <div class="message-type" v-show="studioPromotions.length">
-          <div
-            class="message-type-title hover-reverse"
-            @click="messageTypeExtended.studioPromotions = !messageTypeExtended.studioPromotions"
-          >
-            <div class="btn-dropdown">
-              <img
-                src="../../images/icons/expand.svg"
-                alt="v"
-                :class="{'reverted': messageTypeExtended.studioPromotions}"
-              />
-            </div>
-            <span class="message-type-title-text">{{ uiMessages.studioPromotionsMsg }}</span>
-            <span class="float-right"
-              ><img class="small-icon" src="../../images/icons/adminusers.svg" /> {{ studioPromotions.length }}</span
-            >
-          </div>
-          <div class="message-type-details" v-show="messageTypeExtended.studioPromotions">
-            <div class="thread-list" v-for="promotion of studioPromotions">{{{ studioPromotionHTML(promotion) }}}</div>
-          </div>
-        </div>
-
-        <!-- Forum activity -->
-        <div class="message-type" v-show="forumActivity.length">
-          <div
-            class="message-type-title hover-reverse"
-            @click="messageTypeExtended.forumActivity = !messageTypeExtended.forumActivity"
-          >
-            <div class="btn-dropdown">
-              <img
-                src="../../../images/icons/expand.svg"
-                alt="v"
-                :class="{'reverted': messageTypeExtended.forumActivity}"
-              />
-            </div>
-            <span class="message-type-title-text">{{ uiMessages.forumMsg }}</span>
-            <span class="float-right"
-              ><img class="small-icon" src="../../images/icons/forum.svg" /> {{ forumActivity.length }}</span
-            >
-          </div>
-          <div class="message-type-details" v-show="messageTypeExtended.forumActivity">
-            <div class="thread-list" v-for="forumTopic of forumActivity">{{{ forumHTML(forumTopic) }}}</div>
-          </div>
-        </div>
-
-        <!-- Studio activity -->
-        <div class="message-type" v-show="studioActivity.length">
-          <div
-            class="message-type-title hover-reverse"
-            @click="messageTypeExtended.studioActivity = !messageTypeExtended.studioActivity"
-          >
-            <div class="btn-dropdown">
-              <img
-                src="../../images/icons/expand.svg"
-                alt="v"
-                :class="{'reverted': messageTypeExtended.studioActivity}"
-              />
-            </div>
-            <span class="message-type-title-text">{{ uiMessages.studioActivityMsg }}</span>
-            <span class="float-right"
-              ><img class="small-icon" src="../../images/icons/studio.svg" /> {{ studioActivity.length }}</span
-            >
-          </div>
-          <div class="message-type-details" v-show="messageTypeExtended.studioActivity">
-            <div class="thread-list" v-for="studio of studioActivity">{{{ studioActivityHTML(studio) }}}</div>
-          </div>
-        </div>
-
-        <!-- Remixes -->
-        <div class="message-type" v-show="remixes.length">
-          <div
-            class="message-type-title hover-reverse"
-            @click="messageTypeExtended.remixes = !messageTypeExtended.remixes"
-          >
-            <div class="btn-dropdown">
-              <img src="../../images/icons/expand.svg" alt="v" :class="{'reverted': messageTypeExtended.remixes}" />
-            </div>
-            <span class="message-type-title-text">{{ uiMessages.remixesMsg }}</span>
-            <span class="float-right"
-              ><img class="small-icon" src="../../images/icons/remix.svg" /> {{ remixes.length }}</span
-            >
-          </div>
-          <div class="message-type-details" v-show="messageTypeExtended.remixes">
-            <div v-for="remix of remixes" class="thread-list">{{{ remixHTML(remix) }}}</div>
-          </div>
-        </div>
-
-        <!-- Profiles -->
-        <div
-          class="message-type"
-          v-for="profile of profilesOrdered"
-          v-show="profile.unreadComments && profile.loadedComments"
-        >
-          <div class="message-type-title">
-            <a
-              class="message-type-title-text nolink"
-              rel="noreferrer noopener"
-              target="_blank"
-              href="https://scratch.mit.edu/users/{{ profile.username }}/"
-            >
-              <span v-if="profile.username === username">{{ uiMessages.yourProfileMsg }}</span>
-              <span v-else>{{ othersProfile(profile.username) }}</span>
-            </a>
-            <span class="float-right">
-              <span v-show="profile.unreadComments"
-                ><img class="small-icon" src="../../images/icons/comment.svg" /> {{profile.unreadComments}}</span
-              >
-            </span>
-          </div>
-          <div class="message-type-details" v-show="profile.commentChains.length">
-            <div
-              class="comment-chain"
-              v-for="parentCommentId of profile.commentChains"
-              :class="{'unread': isCommentUnread(parentCommentId) }"
-            >
-              <comment
-                :comment-id="parentCommentId"
-                :comments-obj="comments"
-                :is-parent="true"
-                :unread="false"
-                resource-type="user"
-                :resource-id="profile.username"
-              ></comment>
-              <comment
-                v-for="childCommentId of comments[parentCommentId].children"
-                :comment-id="childCommentId"
-                :comments-obj="comments"
-                :is-parent="false"
-                :unread="isCommentUnread(childCommentId)"
-                resource-type="user"
-                :resource-id="profile.username"
-              ></comment>
-            </div>
-          </div>
-        </div>
-        <!-- Studios -->
-        <div class="message-type" v-for="studio of studios" v-show="studio.unreadComments && studio.loadedComments">
-          <div class="message-type-title">
-            <a
-              class="message-type-title-text nolink"
-              rel="noopener noreferrer"
-              target="_blank"
-              href="https://scratch.mit.edu/studios/{{ studio.id }}/"
-              >{{ studioText(studio.title) }}</a
-            >
-            <span class="float-right">
-              <span v-show="studio.unreadComments"
-                ><img class="small-icon" src="../../images/icons/comment.svg" /> {{studio.unreadComments}}</span
-              >
-            </span>
-          </div>
-          <div class="message-type-details" v-show="studio.commentChains.length">
-            <div
-              class="comment-chain"
-              v-for="parentCommentId of studio.commentChains"
-              :class="{'unread': isCommentUnread(parentCommentId) }"
-            >
-              <comment
-                :comment-id="parentCommentId"
-                :comments-obj="comments"
-                :is-parent="true"
-                :unread="false"
-                resource-type="gallery"
-                :resource-id="studio.id"
-              ></comment>
-              <comment
-                v-for="childCommentId of comments[parentCommentId].children"
-                :comment-id="childCommentId"
-                :comments-obj="comments"
-                :is-parent="false"
-                :unread="isCommentUnread(childCommentId)"
-                resource-type="gallery"
-                :resource-id="studio.id"
-              ></comment>
-            </div>
-          </div>
-        </div>
-
-        <!-- Projects -->
-        <div
-          class="message-type"
-          v-for="(i, project) in projectsOrdered"
-          v-show="project.unreadComments && project.loadedComments ||
-              !project.unreadComments && commentsReady"
-        >
-          <div class="message-type-title" :style="{zIndex: 9999 - i}">
-            <a
-              class="message-type-title-text nolink"
-              target="_blank"
-              rel="noopener noreferrer"
-              href="https://scratch.mit.edu/projects/{{ project.id }}/"
-              >{{ project.title }}</a
-            >
-            <span class="float-right">
-              <div class="tooltip" v-if="project.loveCount || project.favoriteCount" style="display: inline-block">
-                <span class="tooltip-indicator">
-                  <span v-show="project.loveCount"
-                    ><img class="small-icon colored" src="../../images/icons/heart.svg" /> {{project.loveCount}}</span
-                  >
-                  <span v-show="project.favoriteCount"
-                    ><img class="small-icon colored" src="../../images/icons/star.svg" />
-                    {{project.favoriteCount}}</span
-                  >
-                </span>
-                <span class="tooltiptext tooltiptextleft" v-html="projectLoversAndFavers(project)"></span>
-              </div>
-              <span v-show="project.unreadComments"
-                ><img class="small-icon" src="../../images/icons/comment.svg" /> {{project.unreadComments}}</span
-              >
-            </span>
-          </div>
-          <div class="message-type-details" v-show="project.commentChains.length">
-            <div
-              class="comment-chain"
-              v-for="parentCommentId of project.commentChains"
-              :class="{'unread': isCommentUnread(parentCommentId) }"
-            >
-              <comment
-                :comment-id="parentCommentId"
-                :comments-obj="comments"
-                :is-parent="true"
-                :unread="false"
-                resource-type="project"
-                :resource-id="project.id"
-              ></comment>
-              <comment
-                v-for="childCommentId of comments[parentCommentId].children"
-                :comment-id="childCommentId"
-                :comments-obj="comments"
-                :is-parent="false"
-                :unread="isCommentUnread(childCommentId)"
-                resource-type="project"
-                :resource-id="project.id"
-              ></comment>
-            </div>
+            <comment
+              :comment-id="parentCommentId"
+              :comments-obj="comments"
+              :is-parent="true"
+              :unread="false"
+              resource-type="gallery"
+              :resource-id="studio.id"
+            ></comment>
+            <comment
+              v-for="childCommentId of comments[parentCommentId].children"
+              :comment-id="childCommentId"
+              :comments-obj="comments"
+              :is-parent="false"
+              :unread="isCommentUnread(childCommentId)"
+              resource-type="gallery"
+              :resource-id="studio.id"
+            ></comment>
           </div>
         </div>
       </div>
 
-      <!-- Show errors, loading, etc. -->
-      <div style="text-align: center; font-size: 0.9rem; padding-bottom: 3.5rem; font-weight: bold">
-        <br />
-        <span v-show="error === 'notReady'">{{ uiMessages.loadingMsg }}</span>
-        <span v-show="error === 'loggedOut'">{{ uiMessages.loggedOutMsg }}</span>
-        <span v-show="messagesReady && !commentsReady">{{ uiMessages.loadingCommentsMsg }}</span>
-        <button @click="reloadPage()" v-show="commentsReady && !canShowMoreMessages">
-          <img class="small-icon" src="../../images/icons/reload.svg" /> {{ uiMessages.reloadMsg }}
-        </button>
-        <span v-show="messagesReady && showingMessagesAmt === 0 && stMessages.length === 0"
-          >{{ uiMessages.noUnreadMsg }}<br /><br
-        /></span>
-        <button @click="showAllMessages = true" v-show="canShowMoreMessages">
-          <img class="small-icon" src="../../images/icons/plus.svg" /> {{ uiMessages.showMoreMsg }}
-        </button>
+      <!-- Projects -->
+      <div
+        class="message-type"
+        v-for="(i, project) in projectsOrdered"
+        v-show="project.unreadComments && project.loadedComments ||
+            !project.unreadComments && commentsReady"
+      >
+        <div class="message-type-title" :style="{zIndex: 9999 - i}">
+          <a
+            class="message-type-title-text nolink"
+            target="_blank"
+            rel="noopener noreferrer"
+            href="https://scratch.mit.edu/projects/{{ project.id }}/"
+            >{{ project.title }}</a
+          >
+          <span class="float-right">
+            <div class="tooltip" v-if="project.loveCount || project.favoriteCount" style="display: inline-block">
+              <span class="tooltip-indicator">
+                <span v-show="project.loveCount"
+                  ><img class="small-icon colored" src="../../images/icons/heart.svg" /> {{project.loveCount}}</span
+                >
+                <span v-show="project.favoriteCount"
+                  ><img class="small-icon colored" src="../../images/icons/star.svg" /> {{project.favoriteCount}}</span
+                >
+              </span>
+              <span class="tooltiptext tooltiptextleft" v-html="projectLoversAndFavers(project)"></span>
+            </div>
+            <span v-show="project.unreadComments"
+              ><img class="small-icon" src="../../images/icons/comment.svg" /> {{project.unreadComments}}</span
+            >
+          </span>
+        </div>
+        <div class="message-type-details" v-show="project.commentChains.length">
+          <div
+            class="comment-chain"
+            v-for="parentCommentId of project.commentChains"
+            :class="{'unread': isCommentUnread(parentCommentId) }"
+          >
+            <comment
+              :comment-id="parentCommentId"
+              :comments-obj="comments"
+              :is-parent="true"
+              :unread="false"
+              resource-type="project"
+              :resource-id="project.id"
+            ></comment>
+            <comment
+              v-for="childCommentId of comments[parentCommentId].children"
+              :comment-id="childCommentId"
+              :comments-obj="comments"
+              :is-parent="false"
+              :unread="isCommentUnread(childCommentId)"
+              resource-type="project"
+              :resource-id="project.id"
+            ></comment>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- Bottom bar-->
-    <div id="bottom-bar" v-show="messagesReady">
-      <a @click="markAsRead()" v-show="!markedAsRead">{{ uiMessages.markAsReadMsg }}</a>
-      <span v-show="markedAsRead" style="font-weight: bold"
-        ><img class="small-icon" src="../../images/icons/read.svg" /> {{ uiMessages.markedAsReadMsg }}</span
-      >&nbsp;&nbsp;|&nbsp;&nbsp;
-      <a href="https://scratch.mit.edu/messages" id="open-messages"
-        >{{ uiMessages.openMessagesMsg }}&nbsp;&nbsp;<img src="../../images/icons/popout.svg" id="popout"
-      /></a>
+    <!-- Show errors, loading, etc. -->
+    <div style="text-align: center; font-size: 0.9rem; padding-bottom: 3.5rem; font-weight: bold">
+      <br />
+      <span v-show="error === 'notReady'">{{ uiMessages.loadingMsg }}</span>
+      <span v-show="error === 'loggedOut'">{{ uiMessages.loggedOutMsg }}</span>
+      <span v-show="messagesReady && !commentsReady">{{ uiMessages.loadingCommentsMsg }}</span>
+      <button @click="reloadPage()" v-show="commentsReady && !canShowMoreMessages">
+        <img class="small-icon" src="../../images/icons/reload.svg" /> {{ uiMessages.reloadMsg }}
+      </button>
+      <span v-show="messagesReady && showingMessagesAmt === 0 && stMessages.length === 0"
+        >{{ uiMessages.noUnreadMsg }}<br /><br
+      /></span>
+      <button @click="showAllMessages = true" v-show="canShowMoreMessages">
+        <img class="small-icon" src="../../images/icons/plus.svg" /> {{ uiMessages.showMoreMsg }}
+      </button>
     </div>
-  </body>
-</html>
+  </div>
+
+  <!-- Bottom bar-->
+  <div id="bottom-bar" v-show="messagesReady">
+    <a @click="markAsRead()" v-show="!markedAsRead">{{ uiMessages.markAsReadMsg }}</a>
+    <span v-show="markedAsRead" style="font-weight: bold"
+      ><img class="small-icon" src="../../images/icons/read.svg" /> {{ uiMessages.markedAsReadMsg }}</span
+    >&nbsp;&nbsp;|&nbsp;&nbsp;
+    <a href="https://scratch.mit.edu/messages" id="open-messages"
+      >{{ uiMessages.openMessagesMsg }}&nbsp;&nbsp;<img src="../../images/icons/popout.svg" id="popout"
+    /></a>
+  </div>
+</template>
+
+<style>
+  button {
+    color: #fff;
+    font-size: 12px;
+    border-radius: 4px;
+    border: 1px solid #333;
+    background: #2a2a2a;
+    padding: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+  }
+
+  .contents {
+    max-height: calc(100% - 25px);
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: grey transparent;
+  }
+
+  .btn-dropdown {
+    display: flex;
+    align-items: center;
+    padding: 5px;
+    border-radius: 4px;
+  }
+  .btn-dropdown:hover {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  .reverted {
+    transform: rotate(180deg);
+  }
+
+  .small-icon.inverted:not(.colored) {
+    filter: invert(1);
+  }
+
+  .btn-dropdown img {
+    height: 23px;
+  }
+
+  .message-type {
+    border-radius: 4px;
+    border: 1px solid #333;
+    background: #2a2a2a;
+    margin: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+  }
+
+  .message-type-title {
+    font-size: 12px;
+    color: white;
+    padding: 6px;
+    padding-inline-end: 8px;
+    cursor: default;
+    display: flex;
+    align-items: center;
+    user-select: none;
+  }
+  .message-type-title:not(.hover-reverse) {
+    position: sticky;
+    top: 0;
+    background: inherit;
+    z-index: 999;
+    border: none;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  }
+
+  .thread-list {
+    padding: 0px 16px 20px 16px;
+    font-size: 12px;
+  }
+
+  .hover-reverse {
+    cursor: pointer;
+  }
+  .sticky {
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    margin: 10px 0px;
+  }
+  .small-icon {
+    height: 14px;
+    vertical-align: text-bottom;
+  }
+  .small-icon:not(.colored) {
+    filter: brightness(100);
+  }
+  .message-type-title-text {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    margin-inline-end: auto;
+    margin-inline-start: 10px;
+    max-width: 75%;
+  }
+  a.message-type-title-text {
+    color: white;
+  }
+  .float-right {
+    margin-inline-start: 6px;
+    white-space: nowrap;
+    font-size: 12px;
+  }
+  .float-right > span {
+    display: inline-block;
+    margin-inline-start: 6px;
+  }
+
+  .tooltip {
+    padding-inline-start: 10px;
+  }
+
+  .username-list {
+    padding: 0px 16px 20px 16px;
+    font-size: 12px;
+  }
+
+  .username-list > a {
+    display: inline-block;
+    margin-inline-end: 10px;
+  }
+
+  .thread-list:last-child {
+    margin-bottom: 0px !important;
+  }
+
+  .message-type-details > .comment-chain:last-child {
+    border-bottom: none;
+  }
+
+  #bottom-bar {
+    position: absolute;
+    z-index: 10000;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    min-height: 5vh;
+    background: #222;
+    border-top: 1px solid #00000038;
+    font-size: 12px;
+    text-align: center;
+    box-shadow: 0 -1px 7px rgba(0, 0, 0, 0.1);
+    min-height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  #bottom-bar > a:hover {
+    color: #ff7b26;
+    text-decoration: none;
+  }
+  #popout {
+    height: 0.8rem;
+    vertical-align: middle;
+    opacity: 0.6;
+    filter: brightness(100);
+  }
+  [dir="rtl"] #popout {
+    transform: scaleX(-1);
+  }
+  #open-messages {
+    color: inherit;
+  }
+  #open-messages:hover #popout {
+    opacity: 1;
+    filter: none;
+  }
+  /*scrollbar*/
+
+  /* width */
+  ::-webkit-scrollbar {
+    width: 7px;
+  }
+
+  /* hide track */
+  ::-webkit-scrollbar-track {
+    background: none;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: grey;
+    border-radius: 4px;
+  }
+</style>
+
+<style light>
+  .contents {
+    color: #222;
+  }
+
+  button {
+    border: 1px solid #8f8f8f;
+    background: #e0e0e0;
+    color: #222;
+  }
+  #bottom-bar {
+    background: #e3e3e3;
+  }
+
+  .message-type {
+    border: 1px solid #cfcfcf;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    background: #f7f7f7;
+  }
+  .message-type-title {
+    color: black;
+  }
+  .btn-dropdown img {
+    filter: invert(1);
+  }
+  .message-type-title:hover .btn-dropdown {
+    background: rgba(0, 0, 0, 0.05);
+  }
+
+  .comment {
+    background: #f2f2f2;
+    border: 1px solid #b9b9b9;
+  }
+
+  .small-icon:not(.colored) {
+    filter: brightness(0);
+  }
+
+  .popout-comment {
+    filter: brightness(0);
+  }
+
+  #popout {
+    filter: brightness(0);
+  }
+
+  .comment.unread,
+  .unread .comment {
+    background-color: #fff;
+  }
+
+  .reply-textarea {
+    background-color: #f2f2f2;
+    color: black;
+  }
+
+  a.message-type-title-text {
+    color: black;
+  }
+</style>

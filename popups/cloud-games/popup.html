@@ -1,50 +1,141 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <link rel="preload" href="light.css" as="style" />
-    <link rel="preload" href="popup.css" as="style" />
-    <meta charset="UTF-8" />
-    <title></title>
-    <style>
-      @import url("../../webpages/styles/components/popup.css");
-    </style>
-    <link rel="stylesheet" href="popup.css" />
-    <link href="../../libraries/thirdparty/Sora.css" rel="stylesheet" />
-    <script src="../../libraries/thirdparty/vue.js" defer></script>
-    <script src="../../webpages/popup-loader.js" type="module"></script>
-  </head>
-
-  <body style="display: none" v-show="true">
-    <div class="loading" v-show="!error && (projects.length === 0 || projects.length !== projectsChecked)">
-      {{ loadingMsg }}
-    </div>
-    <div class="loading" v-show="error">
-      {{ errorMessage }}
-      <span v-if="error !== 'server-error'">{{{ settingsHTML() }}}</span>
-    </div>
-    <div v-show="loaded">
-      <div class="games" v-for="project of projectsSorted">
-        <div class="title">
-          <a class="project-name nolink" :href="'https://scratch.mit.edu/projects/' + project.id" target="_blank"
-            >{{ project.title }}</a
-          >
-          <span class="float-right"
-            ><img class="small-icon" src="../../images/icons/users.svg" /> {{ project.amt }}</span
+<template>
+  <div class="loading" v-show="!error && (projects.length === 0 || projects.length !== projectsChecked)">
+    {{ loadingMsg }}
+  </div>
+  <div class="loading" v-show="error">
+    {{ errorMessage }}
+    <span v-if="error !== 'server-error'">{{{ settingsHTML() }}}</span>
+  </div>
+  <div class="games-container" v-show="loaded">
+    <div class="games" v-for="project of projectsSorted">
+      <div class="title">
+        <a class="project-name nolink" :href="'https://scratch.mit.edu/projects/' + project.id" target="_blank"
+          >{{ project.title }}</a
+        >
+        <span class="float-right"><img class="small-icon" src="../../images/icons/users.svg" /> {{ project.amt }}</span>
+      </div>
+      <div class="project-details" v-show="true || project.amt > 0 && project.extended">
+        <div class="username-list">
+          <a
+            v-for="user of project.users"
+            :href="'https://scratch.mit.edu/users/' + user"
+            target="_blank"
+            class="nolink"
+            >{{ user }}</a
           >
         </div>
-        <div class="project-details" v-show="true || project.amt > 0 && project.extended">
-          <div class="username-list">
-            <a
-              v-for="user of project.users"
-              :href="'https://scratch.mit.edu/users/' + user"
-              target="_blank"
-              class="nolink"
-              >{{ user }}</a
-            >
-          </div>
-          <div class="username-list" v-show="project.amt === 0">{{ messages.noUsersMsg }}</div>
-        </div>
+        <div class="username-list" v-show="project.amt === 0">{{ messages.noUsersMsg }}</div>
       </div>
     </div>
-  </body>
-</html>
+  </div>
+</template>
+
+<style>
+  .loading {
+    text-align: center;
+    font-size: 0.9rem;
+    padding-top: 1rem;
+    font-weight: bold;
+    margin: 0 2rem;
+  }
+
+  .title {
+    top: 0;
+    z-index: 999;
+    font-size: 12px;
+    color: white;
+    padding: 12px 20px;
+    padding-inline-end: 8px;
+    padding-bottom: none;
+    margin-bottom: 12px;
+    cursor: default;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    user-select: none;
+  }
+
+  .project-name {
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    margin-inline-end: auto;
+    max-width: 75%;
+  }
+  .float-right {
+    margin-inline-end: 4px;
+    white-space: nowrap;
+    font-size: 12px;
+  }
+  .float-right > span {
+    display: inline-block;
+    margin-inline-end: 2px;
+  }
+
+  .project-details {
+    padding: 0px 20px 20px 20px;
+    font-size: 12px;
+  }
+  .username-list > a {
+    display: inline-block;
+    margin-inline-end: 10px;
+    color: #1aa0d8;
+  }
+
+  .games-container {
+    padding-block: 1px;
+  }
+  .games {
+    border-radius: 4px;
+    border: 1px solid #333;
+    background: #2a2a2a;
+    margin: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+  }
+
+  .title a {
+    color: white;
+  }
+
+  .small-icon {
+    height: 14px;
+    vertical-align: text-bottom;
+    filter: brightness(10);
+  }
+  /*scrollbar*/
+
+  /* width */
+  ::-webkit-scrollbar {
+    width: 7px;
+  }
+
+  /* hide track */
+  ::-webkit-scrollbar-track {
+    background: none;
+  }
+
+  /* Handle */
+  ::-webkit-scrollbar-thumb {
+    background: grey;
+    border-radius: 4px;
+  }
+</style>
+
+<style light>
+  .games {
+    border: 1px solid #cfcfcf;
+    background: #f7f7f7;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    color: #222;
+  }
+
+  .loading,
+  .title,
+  .title a {
+    color: #222;
+  }
+
+  .small-icon:not(.colored) {
+    filter: brightness(0);
+  }
+</style>

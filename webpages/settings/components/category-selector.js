@@ -23,5 +23,5 @@ export default async function ({ template }) {
       },
     },
   });
-  Vue.component("category-selector", CategorySelector);
+  return { "category-selector": CategorySelector };
 }
