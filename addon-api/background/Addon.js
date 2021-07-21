@@ -1,12 +1,14 @@
 import Addon from "../common/Addon.js";
 import Notifications from "./Notifications.js";
 import Badge from "./Badge.js";
+import MessagePasser from "./MessagePasser.js";
 
 /**
  * An addon that loads as a background script.
  * @extends Addon
  * @property {Notifications} [notifications]
  * @property {Badge} [badge]
+ * @property {MessagePasser} [messaging]
  */
 export default class BackgroundScriptAddon extends Addon {
   constructor(info) {
@@ -19,6 +21,7 @@ export default class BackgroundScriptAddon extends Addon {
       if (permissions.includes("notifications")) this.notifications = new Notifications(this);
       if (permissions.includes("badge")) this.badge = new Badge(this);
     }
+    this.messaging = new MessagePasser(this);
   }
   _kill() {
     this.auth.dispose();

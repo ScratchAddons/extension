@@ -1,10 +1,12 @@
 import Addon from "../common/Addon.js";
 import Tab from "./Tab.js";
+import MessagePasser from "./MessagePasser.js";
 
 /**
  * An addon that loads as a userscript.
  * @extends Addon
  * @property {Tab} tab
+ * @property {MessagePasser} messaging
  */
 export default class UserscriptAddon extends Addon {
   constructor(info) {
@@ -14,6 +16,7 @@ export default class UserscriptAddon extends Addon {
     this.tab = new Tab(info);
     this.self.disabled = false;
     this.self.enabledLate = info.enabledLate;
+    this.messaging = new MessagePasser(info);
   }
 
   /**
