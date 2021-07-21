@@ -8,21 +8,22 @@ export default async function ({ addon, global, console, setTimeout, setInterval
   let addonEnabled = true;
   // reuse one DOMParser
   const parser = new DOMParser();
+  const defaultUsername = await addon.auth.fetchUsername();
 
-  const getDefaultData = () => ({
+  const getDefaultData = (username) => ({
     messages: [],
     lastMsgCount: null,
-    username: addon.auth.username,
+    username,
     ready: false,
   });
 
   addon.auth.addEventListener("change", () => (pendingAuthChange = true));
-  resetData();
+  resetData(defaultUsername);
   routine();
 
-  function resetData() {
+  function resetData(username) {
     lastDateTime = null;
-    data = getDefaultData();
+    data = getDefaultData(username);
   }
 
   async function routine() {
@@ -30,7 +31,7 @@ export default async function ({ addon, global, console, setTimeout, setInterval
     while (addonEnabled) {
       if (pendingAuthChange) {
         pendingAuthChange = false;
-        resetData();
+        resetData(await addon.auth.fetchUsername());
         routine();
         break;
       } else {
@@ -49,7 +50,8 @@ export default async function ({ addon, global, console, setTimeout, setInterval
   }
 
   async function checkMessages({ checkOld = false } = {}) {
-    if (!addon.auth.isLoggedIn) return;
+    if (!(await addon.auth.fetchIsLoggedIn())) return;
+    const username = await addon.auth.fetchUsername();
 
     // Check if message count changed, if not, return
     const msgCount = await addon.account.getMsgCount();
@@ -98,9 +100,9 @@ export default async function ({ addon, global, console, setTimeout, setInterval
     lastDateTime = new Date(checkedMessages[0].datetime_created).getTime();
 
     data.stMessages = await (
-      await fetch(`https://api.scratch.mit.edu/users/${addon.auth.username}/messages/admin`, {
+      await fetch(`https://api.scratch.mit.edu/users/${username}/messages/admin`, {
         headers: {
-          "x-token": addon.auth.xToken,
+          "x-token": await addon.auth.fetchXToken(),
         },
       })
     ).json();
@@ -111,9 +113,12 @@ export default async function ({ addon, global, console, setTimeout, setInterval
   const messageListener = (request, sender, sendResponse) => {
     if (!request.scratchMessaging) return;
     const popupRequest = request.scratchMessaging;
-    if (popupRequest === "getData")
-      sendResponse(data.ready ? data : { error: addon.auth.isLoggedIn ? "notReady" : "loggedOut" });
-    else if (popupRequest.postComment) {
+    if (popupRequest === "getData") {
+      addon.auth
+        .fetchIsLoggedIn()
+        .then((isLoggedIn) => sendResponse(data.ready ? data : { error: isLoggedIn ? "notReady" : "loggedOut" }));
+      return true;
+    } else if (popupRequest.postComment) {
       sendComment(popupRequest.postComment).then((status) => sendResponse(status));
       return true;
     } else if (popupRequest.retrieveComments) {
@@ -358,13 +363,16 @@ export default async function ({ addon, global, console, setTimeout, setInterval
   }
 
   async function sendComment({ resourceType, resourceId, content, parent_id, commentee_id, commenteeUsername }) {
+    const xToken = await addon.auth.fetchXToken();
+    const username = await addon.auth.fetchUsername();
+    const userId = await addon.auth.fetchUserId();
     if (resourceType === "project" || resourceType === "gallery") {
       const resourceTypeUrl = resourceType === "project" ? "project" : "studio";
       const res = await fetch(`https://api.scratch.mit.edu/proxy/comments/${resourceTypeUrl}/${resourceId}?sareferer`, {
         headers: {
           "content-type": "application/json",
           "x-csrftoken": addon.auth.csrfToken,
-          "x-token": addon.auth.xToken,
+          "x-token": xToken,
         },
         body: JSON.stringify({ content, parent_id, commentee_id }),
         method: "POST",
@@ -379,8 +387,8 @@ export default async function ({ addon, global, console, setTimeout, setInterval
         const mention = `<a href=\"https://scratch.mit.edu/users/${commenteeUsername}\">@${commenteeUsername}</a>`;
         return {
           commentId: json.id,
-          username: addon.auth.username,
-          userId: addon.auth.userId,
+          username: username,
+          userId: userId,
           content: `${mention} ${fixCommentContent(json.content)}`,
         };
       } else {
@@ -403,7 +411,7 @@ export default async function ({ addon, global, console, setTimeout, setInterval
             if (comment) {
               const commentId = Number(comment.getAttribute("data-comment-id"));
               const content = fixCommentContent(dom.querySelector(".content"));
-              resolve({ commentId, username: addon.auth.username, userId: addon.auth.userId, content });
+              resolve({ commentId, username: username, userId: userId, content });
             } else if (error) {
               const json = JSON.parse(error.textContent);
               resolve({
@@ -422,6 +430,7 @@ export default async function ({ addon, global, console, setTimeout, setInterval
   }
 
   async function deleteComment({ resourceType, resourceId, commentId }) {
+    const xToken = await addon.auth.fetchXToken();
     if (resourceType === "project" || resourceType === "gallery") {
       const resourceTypeUrl = resourceType === "project" ? "project" : "studio";
       const res = await fetch(
@@ -430,7 +439,7 @@ export default async function ({ addon, global, console, setTimeout, setInterval
           headers: {
             "content-type": "application/json",
             "x-csrftoken": addon.auth.csrfToken,
-            "x-token": addon.auth.xToken,
+            "x-token": xToken,
           },
           method: "DELETE",
         }

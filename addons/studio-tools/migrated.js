@@ -168,7 +168,7 @@ export default async ({ addon, console, msg }) => {
 
       leaveBtn.addEventListener("click", async () => {
         if (!confirm(msg("leave-confirm"))) return;
-        const u = addon.auth.username;
+        const u = await addon.auth.fetchUsername();
         const r = await fetch(`/site-api/users/curators-in/${studioId}/remove/?usernames=${u}`, {
           method: "PUT",
           credentials: "include",

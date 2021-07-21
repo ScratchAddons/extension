@@ -13,14 +13,16 @@ export default async function ({ addon, global, console, msg }) {
     loadMore.addEventListener("click", async function () {
       dataLoaded += 5;
       if (dataLoaded > fetched.length) {
+        const username = await addon.auth.fetchUsername();
+        const xToken = await addon.auth.fetchXToken();
         await fetch(
           `
-          https://api.scratch.mit.edu/users/${addon.auth.username}/following/users/activity?limit=40&offset=${
+          https://api.scratch.mit.edu/users/${username}/following/users/activity?limit=40&offset=${
             Math.floor(dataLoaded / 40) * 40
           }`,
           {
             headers: {
-              "X-Token": addon.auth.xToken,
+              "X-Token": xToken,
             },
           }
         )

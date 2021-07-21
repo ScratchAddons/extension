@@ -66,9 +66,6 @@ const cs = {
     this._url = newUrl;
     csUrlObserver.dispatchEvent(new CustomEvent("change", { detail: { newUrl } }));
   },
-  requestMsgCount() {
-    chrome.runtime.sendMessage("getMsgCount");
-  },
   copyImage(dataURL) {
     // Firefox only
     return new Promise((resolve, reject) => {
@@ -266,7 +263,21 @@ function waitForDocumentHead() {
   }
 }
 
-async function onInfoAvailable({ globalState: globalStateMsg, l10njson, addonsWithUserscripts, addonsWithUserstyles }) {
+function getL10NURLs() {
+  const langCode = /scratchlanguage=([\w-]+)/.exec(document.cookie)?.[1] || "en";
+  const urls = [chrome.runtime.getURL(`addons-l10n/${langCode}`)];
+  if (langCode === "pt") {
+    urls.push(chrome.runtime.getURL(`addons-l10n/pt-br`));
+  }
+  if (langCode.includes("-")) {
+    urls.push(chrome.runtime.getURL(`addons-l10n/${langCode.split("-")[0]}`));
+  }
+  const enJSON = chrome.runtime.getURL("addons-l10n/en");
+  if (!urls.includes(enJSON)) urls.push(enJSON);
+  return urls;
+}
+
+async function onInfoAvailable({ globalState: globalStateMsg, addonsWithUserscripts, addonsWithUserstyles }) {
   // In order for the "everLoadedAddons" not to change when "addonsWithUserscripts" changes, we stringify and parse
   const everLoadedAddons = JSON.parse(JSON.stringify(addonsWithUserscripts));
   const disabledDynamicAddons = [];
@@ -283,7 +294,7 @@ async function onInfoAvailable({ globalState: globalStateMsg, l10njson, addonsWi
   }
 
   _page_.globalState = globalState;
-  _page_.l10njson = l10njson;
+  _page_.l10njson = getL10NURLs();
   _page_.addonsWithUserscripts = addonsWithUserscripts;
   _page_.dataReady = true;
 
@@ -330,12 +341,12 @@ async function onInfoAvailable({ globalState: globalStateMsg, l10njson, addonsWi
       // Try looking for the "userscriptMatches" function.
       removeAddonStyles(addonId);
       addStyle({ styles: userstyles, addonId, injectAsStyleElt, index });
-    } else if (request.setMsgCount) {
-      _page_.setMsgCount(request.setMsgCount);
     } else if (request === "getRunningAddons") {
       const userscripts = addonsWithUserscripts.map((obj) => obj.addonId);
       const userstyles = addonsWithUserstyles.map((obj) => obj.addonId);
       sendResponse({ userscripts, userstyles, disabledDynamicAddons });
+    } else if (request === "refetchSession") {
+      _page_.refetchSession();
     }
   });
 }

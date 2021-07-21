@@ -62,7 +62,9 @@ export default async function ({ addon, global, console, msg }) {
     isFetching = true;
     data[type].offset += itemPageLimit;
     const res = await fetch(
-      `https://api.scratch.mit.edu/users/${addon.auth.username}/${type}?offset=${data[type].offset}&limit=${itemPageLimit}`
+      `https://api.scratch.mit.edu/users/${await addon.auth.fetchUsername()}/${type}?offset=${
+        data[type].offset
+      }&limit=${itemPageLimit}`
     );
     if (!res.ok) {
       // Cooldown in case something went wrong

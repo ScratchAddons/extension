@@ -10,7 +10,7 @@ export default class Account extends Listenable {
   }
   /**
    * Fetches message count.
-   * @returns {Promise<number>} - current message count.
+   * @returns {Promise<?number>} - current message count.
    */
   getMsgCount() {
     return scratchAddons.methods.getMsgCount();

@@ -3,7 +3,6 @@
 
 const _localState = {
   ready: {
-    auth: false,
     manifests: false,
     addonSettings: false,
   },

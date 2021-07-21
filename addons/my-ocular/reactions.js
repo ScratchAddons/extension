@@ -1,5 +1,7 @@
 export default async function ({ addon, global, console, msg }) {
   let posts = document.querySelectorAll(".blockpost");
+  const isLoggedIn = await addon.auth.fetchIsLoggedIn();
+  const username = await addon.auth.fetchUsername();
 
   posts.forEach(async (i) => {
     let postID = i.id.split("p")[1];
@@ -18,7 +20,7 @@ export default async function ({ addon, global, console, msg }) {
       order: 2,
     });
 
-    if (addon.auth.isLoggedIn) {
+    if (isLoggedIn) {
       let reactionMenuContainer = document.createElement("li");
       addon.tab.displayNoneWhileDisabled(reactionMenuContainer);
       reactionMenuContainer.className = "my-ocular-reaction-menu";
@@ -62,7 +64,7 @@ export default async function ({ addon, global, console, msg }) {
           reactionMenuItem.className = "my-ocular-reaction-button";
           reactionMenuItem.innerText = reaction.emoji;
 
-          if (reaction.reactions.find((r) => r.user === addon.auth.username)) {
+          if (reaction.reactions.find((r) => r.user === username)) {
             if (reactionButton) reactionButton.classList.add("selected");
             reactionMenuItem.classList.add("selected");
           }

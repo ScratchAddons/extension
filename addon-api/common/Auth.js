@@ -5,36 +5,33 @@ import Listenable from "./Listenable.js";
  * @extends Listenable
  */
 export default class Auth extends Listenable {
-  constructor(addonObject) {
-    super();
+  /**
+   * Fetch whether the user is logged in or not.
+   * @returns {Promise<boolean>} - whether the user is logged in or not.
+   */
+  fetchIsLoggedIn() {
+    return Promise.resolve(scratchAddons.globalState.auth.isLoggedIn);
   }
   /**
-   * Whether the user is logged in or not.
-   * @type {boolean}
+   * Fetch current username.
+   * @returns {Promise<?string>} - the username.
    */
-  get isLoggedIn() {
-    return scratchAddons.globalState.auth.isLoggedIn;
+  fetchUsername() {
+    return Promise.resolve(scratchAddons.globalState.auth.username);
   }
   /**
-   * Current username.
-   * @type {?string}
+   * Fetch current user ID.
+   * @returns {Promise<?number>} - the user ID.
    */
-  get username() {
-    return scratchAddons.globalState.auth.username;
+  fetchUserId() {
+    return Promise.resolve(scratchAddons.globalState.auth.userId);
   }
   /**
-   * Current user ID.
-   * @type {?number}
+   * Fetch X-Token used in new APIs.
+   * @returns {Promise<?string>} - the X-Token.
    */
-  get userId() {
-    return scratchAddons.globalState.auth.userId;
-  }
-  /**
-   * X-Token used in new APIs.
-   * @type {?string}
-   */
-  get xToken() {
-    return scratchAddons.globalState.auth.xToken;
+  fetchXToken() {
+    return Promise.resolve(scratchAddons.globalState.auth.xToken);
   }
   /**
    * CSRF token used in APIs.

@@ -40,12 +40,11 @@ class StateProxy {
 }
 
 function messageForAllTabs(message) {
-  // May log errors to the console in Firefox, where we don't have the permission
-  // to read URLs from tabs even if we have content scripts on them.
-  // No need to specify frame IDs, because this message should also arrive to iframes.
   chrome.tabs.query({}, (tabs) =>
     tabs.forEach(
-      (tab) => (tab.url || (!tab.url && typeof browser !== "undefined")) && chrome.tabs.sendMessage(tab.id, message)
+      (tab) =>
+        (tab.url || (!tab.url && typeof browser !== "undefined")) &&
+        chrome.tabs.sendMessage(tab.id, message, () => void chrome.runtime.lastError)
     )
   );
   scratchAddons.sendToPopups(message);
@@ -56,8 +55,9 @@ function stateChange(parentObjectPath, key, value) {
   const objectPathArr = objectPath.split(".").slice(2);
   console.log(`%c${objectPath}`, "font-weight: bold;", "is now: ", objectPathArr[0] === "auth" ? "[redacted]" : value);
   if (objectPathArr[0] === "auth" && key !== "scratchLang") {
+    // NOTE: Do not send to content script; this is handled in handle-auth.js
     scratchAddons.eventTargets.auth.forEach((eventTarget) => eventTarget.dispatchEvent(new CustomEvent("change")));
-    messageForAllTabs({ fireEvent: { target: "auth", name: "change" } });
+    scratchAddons.sendToPopups({ fireEvent: { target: "auth", name: "change" } });
   } else if (objectPathArr[0] === "addonSettings") {
     // Send event to persistent script and userscripts, if they exist.
     const settingsEventTarget = scratchAddons.eventTargets.settings.find(

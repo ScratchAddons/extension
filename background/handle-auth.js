@@ -1,11 +1,40 @@
+const promisify =
+  (callbackFn) =>
+  (...args) =>
+    new Promise((resolve) => callbackFn(...args, resolve));
+
+function getDefaultStoreId() {
+  // Request Scratch to set the CSRF token.
+  return fetch("https://scratch.mit.edu/csrf_token/", {
+    credentials: "include",
+  })
+    .catch(() => {})
+    .then(() =>
+      promisify(chrome.cookies.get)({
+        url: "https://scratch.mit.edu/",
+        name: "scratchcsrftoken",
+      })
+    )
+    .then((cookie) => {
+      return (scratchAddons.cookieStoreId = cookie.storeId);
+    });
+}
+
 (async function () {
+  const defaultStoreId = await getDefaultStoreId();
+  console.log("Default cookie store ID: ", defaultStoreId);
   await checkSession();
-  scratchAddons.localState.ready.auth = true;
 })();
 
 chrome.cookies.onChanged.addListener(({ cookie, changeCause }) => {
-  if (cookie.name === "scratchsessionsid" || cookie.name === "scratchlanguage" || cookie.name === "scratchcsrftoken")
-    checkSession();
+  if (cookie.name === "scratchsessionsid" || cookie.name === "scratchlanguage" || cookie.name === "scratchcsrftoken") {
+    if (!scratchAddons.cookieStoreId) {
+      getDefaultStoreId().then(() => checkSession());
+    } else if (cookie.storeId === scratchAddons.cookieStoreId) {
+      checkSession();
+    }
+    notifyContentScripts(cookie);
+  }
 });
 
 function getCookieValue(name) {
@@ -37,7 +66,18 @@ async function checkSession() {
     console.warn(err);
     json = {};
     // If Scratch is down, or there was no internet connection, recheck soon:
-    if ((res && !res.ok) || !res) setTimeout(checkSession, 60000);
+    if ((res && !res.ok) || !res) {
+      setTimeout(checkSession, 60000);
+      scratchAddons.globalState.auth = {
+        isLoggedIn: false,
+        username: null,
+        userId: null,
+        xToken: null,
+        csrfToken: null,
+        scratchLang: (await getCookieValue("scratchlanguage")) || navigator.language,
+      };
+      return;
+    }
   }
   const scratchLang = (await getCookieValue("scratchlanguage")) || navigator.language;
   const csrfToken = await getCookieValue("scratchcsrftoken");
@@ -49,4 +89,16 @@ async function checkSession() {
     csrfToken,
     scratchLang,
   };
+}
+
+function notifyContentScripts(cookie) {
+  if (cookie.name === "scratchlanguage") return;
+  const storeId = cookie.storeId;
+  chrome.tabs.query(
+    {
+      cookieStoreId: storeId,
+    },
+    (tabs) =>
+      tabs.forEach((tab) => chrome.tabs.sendMessage(tab.id, "refetchSession", () => void chrome.runtime.lastError))
+  );
 }
