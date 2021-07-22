@@ -8,5 +8,5 @@ export default async function ({ addon, global, console, setTimeout, setInterval
   addon.settings.addEventListener("change", () => {
     addon.badge.color = addon.settings.get("color");
   });
-  setInterval(setBadge, 2500);
+  setInterval(setBadge, 60_000);
 }

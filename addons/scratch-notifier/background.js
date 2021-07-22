@@ -17,7 +17,7 @@ export default async function ({ addon, global, console, setTimeout, setInterval
   };
 
   checkCount();
-  setInterval(checkCount, 5000);
+  setInterval(checkCount, 60_000);
 
   async function checkCount() {
     if (!addon.auth.isLoggedIn) return;
