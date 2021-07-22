@@ -1,0 +1,42 @@
+{
+  "name": "Compact messages",
+  "description": "Makes the messages page more compact and easier to read.",
+  "settings": [
+    {
+      "name": "Hide message icons",
+      "id": "hide_icons",
+      "type": "boolean",
+      "default": true
+    },
+    {
+      "name": "Message padding (5-15 pixels)",
+      "id": "message_padding",
+      "type": "integer",
+      "default": 5,
+      "max": 15
+    },
+    {
+      "name": "Comment box padding (5-15 pixels)",
+      "id": "comment_padding",
+      "type": "integer",
+      "default": 5,
+      "max": 15,
+    }
+  ],
+  "userstyles": [
+    {
+      "url": "styles.css",
+      "matches": ["https://scratch.mit.edu/messages"]
+    },
+    {
+      "url": "hide_icons.css",
+      "matches": ["https://scratch.mit.edu/messages"],
+      "settingMatch": {
+        "id": "hide_icons",
+        "value": true
+      }
+    }
+  ],
+  "tags": ["community", "theme"],
+  "enabledByDefault": false
+}
