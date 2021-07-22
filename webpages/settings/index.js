@@ -634,7 +634,7 @@ chrome.storage.sync.get(["globalTheme"], function ({ globalTheme = false }) {
 
   document.title = chrome.i18n.getMessage("settingsTitle");
   function resize() {
-    if (window.innerWidth < 1000) {
+    if (window.innerWidth < 1100) {
       vue.smallMode = true;
       vue.categoryOpen = false;
       vue.switchPath = "../../images/icons/switch.svg";

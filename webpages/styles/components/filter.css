@@ -1,6 +1,5 @@
 .filter-selector {
   display: flex;
-  font-size: 12px;
   margin-inline-start: 20px;
   align-items: center;
 }
@@ -12,27 +11,30 @@
 
 .filter-options {
   display: flex;
+  height: 32px;
+  box-sizing: border-box;
   border-radius: 4px;
   overflow: hidden;
-  background: var(--accent-2);
-  border: 1px solid #000;
-  font-size: 10px;
+  background: var(--button-background);
+  border: 1px solid var(--control-border);
   user-select: none;
 }
 
 .filter-option {
-  padding: 10px;
-  border-inline-end: 1px solid #000;
+  padding: 0 12px;
+  line-height: 30px;
+  border-inline-end: 1px solid var(--control-border);
+  transition: background 0.2s ease;
 }
 .filter-option:hover {
-  cursor: pointer;
-  background: #1a1a1a;
+  background: var(--button-hover-background);
 }
 .filter-option:last-child {
   border-inline-end: none;
 }
 .filter-option.sel {
   background: var(--brand-orange);
+  color: var(--white-text);
 }
 .filter-option.disabled {
   filter: grayscale(80%);

@@ -9,7 +9,11 @@ body {
   margin: 0;
   background-color: var(--brand-orange); /* Firefox popup arrow */
   font-family: "Sora", sans-serif;
-  color: white;
+  color: var(--white-text);
+}
+
+[v-cloak] {
+  display: none !important;
 }
 
 #header {
@@ -26,17 +30,6 @@ body {
   display: flex;
   align-items: center;
   padding: 0 20px;
-}
-#fullscreen {
-  display: none;
-}
-.popup-name img {
-  vertical-align: middle;
-  filter: brightness(10);
-  height: 18px;
-}
-.popup-title {
-  padding: 0 5px;
 }
 #logo {
   height: 30px;
@@ -55,45 +48,72 @@ body {
 }
 
 #popups {
-  background-color: #222;
+  background-color: var(--content-background);
   width: 100%;
   height: calc(100% - 60px);
 }
 
 #popup-bar {
-  background-color: #2a2a2a;
   padding: 10px;
   padding-bottom: 0px;
+  display: flex;
+  border-bottom: 1px solid var(--control-border);
 }
 
 #popup-chooser {
   display: flex;
-  color: #fff;
-  width: -moz-fit-content;
-  width: fit-content;
+  color: var(--content-text);
   height: 35px;
   overflow: hidden;
 }
 .popup-name {
   display: flex;
   height: 100%;
-  justify-content: center;
+  box-sizing: border-box;
   align-items: center;
-  font-size: 10px;
-  padding-left: 12px;
-  padding-right: 12px;
+  font-size: 12px;
+  padding-inline-start: 10.5px;
+  padding-inline-end: 12px;
   cursor: pointer;
-  border: 1px solid #000;
+  background-color: var(--button-background);
+  border: 1px solid var(--control-border);
+  border-bottom: none;
   border-radius: 12px 12px 0 0;
+  transition: 0.2s ease;
+}
+.popup-name:hover {
+  background-color: var(--button-hover-background);
 }
 .popup-name:not(:last-child) {
-  border-right: none;
+  border-inline-end: none;
 }
 .popup-name.sel {
-  background-color: #ff7b26;
+  background-color: var(--brand-orange);
+  color: var(--white-text);
+}
+.popup-name img {
+  vertical-align: middle;
+  filter: var(--content-icon-filter);
+  height: 18px;
+}
+.popup-name.sel img {
+  filter: brightness(0) invert(1);
+}
+.popup-title {
+  padding-inline-start: 5px;
 }
 .popout > .popout-img {
+  display: inline-block;
+  vertical-align: -3px;
   height: 10px;
+  padding: 2px;
+  margin-inline-start: 3px;
+  margin-inline-end: -2px;
+  border-radius: 2px;
+}
+.popout:hover > .popout-img {
+  background-color: var(--white-text);
+  filter: none;
 }
 [dir="rtl"] .popout > .popout-img {
   transform: scaleX(-1);
@@ -105,13 +125,12 @@ iframe {
   overflow-x: hidden;
   border: none;
   overflow-y: scroll;
-  background-color: #222;
+  background-color: var(--page-background);
 }
 #version {
-  color: white;
+  color: var(--white-text);
   margin: 5px;
-  vertical-align: middle;
   text-decoration: none;
   opacity: 0.75;
-  font-size: 0.7rem;
+  font-size: 12px;
 }

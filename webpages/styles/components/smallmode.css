@@ -1,18 +1,19 @@
 .categories-block.smallMode {
   border-radius: 0px 0px 10px 10px;
   margin-inline-start: 10px;
-  z-index: 10;
+  padding-bottom: 8px;
+  z-index: 5;
   position: absolute;
   max-height: calc(100vh - 60px);
   box-sizing: border-box;
-  filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.5));
+  box-shadow: var(--large-shadow);
+}
+.categories-block.smallMode .category:not(.hasParent) {
+  padding-block: 15px;
 }
 .toggle {
   cursor: pointer;
   width: 24px;
   height: 24px;
   margin-inline-end: 10px;
-}
-.search-box.smallMode {
-  overflow-y: hidden;
 }

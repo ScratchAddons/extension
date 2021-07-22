@@ -5,7 +5,7 @@
 }
 
 .tooltip-indicator {
-  border-bottom: 1px dashed #000;
+  border-bottom: 1px dashed var(--control-border);
   /* little indicator to indicate it's hoverable */
 }
 
@@ -20,12 +20,12 @@
   width: 200px;
   padding: 10px;
   border-radius: 10px;
-  background: #000;
-  color: #fff;
+  background: var(--tooltip-background);
+  color: var(--content-text);
   text-align: center;
   visibility: hidden;
 
-  box-shadow: 0px 0px 16px 10px #3b3b3b52;
+  filter: var(--large-shadow-filter);
 }
 [dir="rtl"] .tooltiptext {
   left: auto;
@@ -53,7 +53,7 @@
   right: 100%; /* To the left of the tooltip */
   margin-top: -5px;
   border: 5px solid transparent;
-  border-inline-end-color: black;
+  border-inline-end-color: var(--tooltip-background);
   white-space: normal;
 }
 [dir="rtl"] .tooltip .tooltiptext::after {
@@ -65,7 +65,7 @@
   left: 100%;
   top: 15px;
   border-inline-end-color: transparent;
-  border-inline-start-color: black;
+  border-inline-start-color: var(--tooltip-background);
 }
 [dir="rtl"] .tooltip .tooltiptext.tooltiptextleft::after {
   left: auto;

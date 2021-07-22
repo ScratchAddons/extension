@@ -5,9 +5,10 @@
     <title></title>
     <link rel="stylesheet" href="popup.css" />
     <script src="../../libraries/thirdparty/vue.js" defer></script>
-    <link rel="preload" href="light.css" as="style" />
+    <link rel="preload" href="../../webpages/styles/colors-light.css" as="style" />
     <script src="../../webpages/popup-loader.js" type="module"></script>
     <style>
+      @import url("../../webpages/styles/colors.css");
       @import url("../../webpages/styles/components/tooltips.css");
       @import url("../../webpages/styles/components/popup.css");
     </style>
@@ -27,7 +28,7 @@
           >{{ thisComment.author }}</a
         >{{ thisComment.scratchTeam ? "*" : "" }}
         <span class="comment-time" v-show="deleteStep !== 1 && !deleted">
-          · {{ commentTimeAgo }}&nbsp;&nbsp;
+          · {{ commentTimeAgo }}
           <a rel="noopener noreferrer" target="_blank" :href="commentURL">
             <img src="../../images/icons/popout.svg" class="popout-comment" title="{{ messages.openNewTabMsg }}" />
           </a>
@@ -52,12 +53,10 @@
         <div class="reply-box-comment" v-show="replying">
           <textarea class="reply-textarea" maxlength="500" v-model="replyBoxValue"></textarea>
           <div class="reply-box-buttons">
-            <button @click="!postingComment && postComment()" style="background-color: #4d97ff">
+            <button @click="!postingComment && postComment()" class="post-button">
               {{ postingComment ? messages.postingMsg : messages.postMsg }}
             </button>
-            <button @click="replying = false" style="background-color: gray" v-show="!postingComment">
-              {{ messages.cancelMsg }}
-            </button>
+            <button @click="replying = false" v-show="!postingComment">{{ messages.cancelMsg }}</button>
             <span class="comment-chars"> {{ replyBoxLeftMsg }}</span>
           </div>
         </div>
@@ -65,11 +64,11 @@
     </template>
   </head>
 
-  <body style="display: none" v-show="mounted">
-    <div class="contents">
+  <body>
+    <div v-cloak class="contents">
       <div v-show="!error">
         <!-- Scratch Team Messages -->
-        <div class="message-type" v-show="stMessages.length" style="border-color: #ff7b26">
+        <div class="message-type message-type-admin" v-show="stMessages.length">
           <div
             class="message-type-title hover-reverse"
             @click="messageTypeExtended.stMessages = !messageTypeExtended.stMessages"
@@ -79,11 +78,11 @@
             </div>
             <span class="message-type-title-text">{{ uiMessages.stMessagesMsg }}</span>
             <span class="float-right"
-              ><img class="small-icon inverted" src="../../images/icons/notice.svg" /> {{ stMessages.length }}</span
+              ><img class="small-icon" src="../../images/icons/notice.svg" /> {{ stMessages.length }}</span
             >
           </div>
           <div class="message-type-details" v-show="messageTypeExtended.stMessages">
-            <div class="comment st-alert" v-for="alert of stMessages">
+            <div class="comment" v-for="alert of stMessages">
               <span class="comment-time">{{ alert.datetime_created }}</span>
               <a class="delete-btn" @click="dismissAlert(alert.id)">{{ uiMessages.dismissMsg }}</a>
               <div v-html="alert.message"></div>
@@ -330,7 +329,7 @@
               >{{ project.title }}</a
             >
             <span class="float-right">
-              <div class="tooltip" v-if="project.loveCount || project.favoriteCount" style="display: inline-block">
+              <div class="tooltip" v-if="project.loveCount || project.favoriteCount">
                 <span class="tooltip-indicator">
                   <span v-show="project.loveCount"
                     ><img class="small-icon colored" src="../../images/icons/heart.svg" /> {{project.loveCount}}</span
@@ -376,17 +375,16 @@
       </div>
 
       <!-- Show errors, loading, etc. -->
-      <div style="text-align: center; font-size: 0.9rem; padding-bottom: 3.5rem; font-weight: bold">
-        <br />
+      <div class="status-container">
         <span v-show="error === 'notReady'">{{ uiMessages.loadingMsg }}</span>
         <span v-show="error === 'loggedOut'">{{ uiMessages.loggedOutMsg }}</span>
         <span v-show="messagesReady && !commentsReady">{{ uiMessages.loadingCommentsMsg }}</span>
         <button @click="reloadPage()" v-show="commentsReady && !canShowMoreMessages">
           <img class="small-icon" src="../../images/icons/reload.svg" /> {{ uiMessages.reloadMsg }}
         </button>
-        <span v-show="messagesReady && showingMessagesAmt === 0 && stMessages.length === 0"
-          >{{ uiMessages.noUnreadMsg }}<br /><br
-        /></span>
+        <span v-show="messagesReady && showingMessagesAmt === 0 && stMessages.length === 0" class="status-empty"
+          >{{ uiMessages.noUnreadMsg }}</span
+        >
         <button @click="showAllMessages = true" v-show="canShowMoreMessages">
           <img class="small-icon" src="../../images/icons/plus.svg" /> {{ uiMessages.showMoreMsg }}
         </button>
@@ -395,12 +393,13 @@
 
     <!-- Bottom bar-->
     <div id="bottom-bar" v-show="messagesReady">
-      <a @click="markAsRead()" v-show="!markedAsRead">{{ uiMessages.markAsReadMsg }}</a>
-      <span v-show="markedAsRead" style="font-weight: bold"
+      <a v-cloak @click="markAsRead()" v-show="!markedAsRead">{{ uiMessages.markAsReadMsg }}</a>
+      <span v-cloak v-show="markedAsRead" class="marked-as-read"
         ><img class="small-icon" src="../../images/icons/read.svg" /> {{ uiMessages.markedAsReadMsg }}</span
-      >&nbsp;&nbsp;|&nbsp;&nbsp;
-      <a href="https://scratch.mit.edu/messages" id="open-messages"
-        >{{ uiMessages.openMessagesMsg }}&nbsp;&nbsp;<img src="../../images/icons/popout.svg" id="popout"
+      >
+      <span v-cloak class="separator">|</span>
+      <a v-cloak href="https://scratch.mit.edu/messages" id="open-messages"
+        >{{ uiMessages.openMessagesMsg }}<img src="../../images/icons/popout.svg" id="popout"
       /></a>
     </div>
   </body>

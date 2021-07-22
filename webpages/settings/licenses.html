@@ -19,12 +19,12 @@
   <body class="licenses">
     <div class="navbar">
       <a href="./index.html"><img src="../../images/icon.svg" class="logo" alt="Logo" /></a>
-      <h1>{{ msg("licenses") }}</h1>
+      <h1 v-cloak>{{ msg("licenses") }}</h1>
     </div>
     <div class="main">
       <div class="licenses-block">
         <div class="license-container">
-          <div class="licenses-body" v-for="library of libraries">
+          <div v-cloak class="licenses-body" v-for="library of libraries">
             <h2>{{ msg("licensesForLibrary", library.name) }}</h2>
             <pre>{{ library.license }}</pre>
           </div>

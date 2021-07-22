@@ -184,8 +184,6 @@ export default async ({ addon, msg, safeMsg }) => {
   const vue = new Vue({
     el: "body",
     data: {
-      mounted: true, // Always true
-
       stMessages: [],
       messages: [],
       comments: {},

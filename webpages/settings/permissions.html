@@ -20,9 +20,9 @@
   <body class="permissions">
     <div class="navbar">
       <a href="./index.html"><img src="../../images/icon.svg" class="logo" alt="Logo" /></a>
-      <h1>{{ msg("permissions") }}</h1>
+      <h1 v-cloak>{{ msg("permissions") }}</h1>
     </div>
-    <div class="main">
+    <div v-cloak class="main">
       <div class="permissions-block">
         <h2>{{ msg("enablePermissionsTitle") }}</h2>
         <p>{{ msg("enablePermissionsDescription") }}</p>

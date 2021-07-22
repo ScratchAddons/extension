@@ -1,12 +1,11 @@
 .modal {
   position: fixed;
-  z-index: 1;
+  z-index: 100;
   left: 0;
   top: 0;
   width: 100%;
   height: 100%;
-  overflow: auto;
-  background-color: rgb(0 0 0 / 65%);
+  background-color: var(--modal-overlay);
   backdrop-filter: blur(2px);
   display: flex;
   align-items: center;
@@ -14,7 +13,7 @@
 }
 
 .modal-content {
-  background-color: var(--accent-2);
+  background-color: var(--page-background);
   margin: auto;
   padding: 20px;
   width: 50rem;
@@ -27,6 +26,7 @@
 .close {
   float: right;
   cursor: pointer;
+  filter: var(--content-icon-filter);
 }
 [dir="rtl"] .close {
   float: left;
@@ -35,14 +35,15 @@
 .footer {
   text-align: center;
   width: 800px;
-  color: gray;
+  color: var(--gray-text);
   margin-top: auto;
 }
 .footer a {
-  color: gray;
+  color: var(--gray-text);
 }
 .settings-block {
   margin-top: 20px;
+  overflow-y: auto;
 }
 .modal .large-button {
   display: block;
@@ -55,6 +56,20 @@
 .modal .addon-setting {
   margin-inline: 0;
 }
+.modal .addon-body:first-child {
+  margin-top: 0;
+}
+.modal .addon-body:last-child {
+  margin-bottom: 0;
+}
+.modal .addon-topbar {
+  height: 36px;
+  border-bottom: 1px solid var(--content-border);
+}
 .modal .addon-name {
   margin-inline-start: 10px;
+}
+.modal .addon-settings {
+  padding: 10px;
+  padding-bottom: 0;
 }

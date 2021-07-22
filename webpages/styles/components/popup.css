@@ -3,8 +3,7 @@ html {
   font-size: 12px;
   height: 100%;
   scrollbar-width: thin;
-  scrollbar-color: grey transparent;
-  color: #dddddd;
+  scrollbar-color: var(--gray-text) transparent;
 }
 html.fullscreen {
   font-size: 15px;
@@ -13,25 +12,50 @@ html.fullscreen {
 body {
   margin: 0 auto;
   font-family: "Sora", sans-serif;
+  font-size: 1rem;
   width: auto;
   overflow-x: hidden;
-  background-color: #222;
+  background-color: var(--page-background);
+  color: var(--content-text);
 }
 
 body.fullscreen {
   width: 55%;
   min-height: calc(100% - 2px);
   height: auto;
-  border: 1px solid black;
-  box-shadow: 0 -1px 7px rgba(0, 0, 0, 0.2);
+  border: 1px solid var(--control-border);
+  box-shadow: var(--fullscreen-popup-shadow);
 }
+
+[v-cloak] {
+  display: none !important;
+}
+
 a {
   cursor: pointer;
   text-decoration: none;
 }
 a[href]:not(.nolink) {
-  color: #1aa0d8;
+  color: var(--blue-text);
 }
 a:hover {
   text-decoration: underline;
+}
+
+/*scrollbar*/
+
+/* width */
+::-webkit-scrollbar {
+  width: 7px;
+}
+
+/* hide track */
+::-webkit-scrollbar-track {
+  background: none;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: grey;
+  border-radius: 4px;
 }

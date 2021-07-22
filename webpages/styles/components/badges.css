@@ -1,6 +1,6 @@
 .badge {
   background: gray;
-  color: #fff;
+  color: var(--white-text);
   border-radius: 4px;
   padding: 2px 5px;
   font-size: 12px;

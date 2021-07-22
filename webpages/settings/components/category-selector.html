@@ -56,7 +56,7 @@
   }
 
   .category:hover {
-    background: rgba(0, 0, 0, 0.1);
+    background: var(--hover-darken);
   }
   .category::before {
     content: "";
@@ -84,10 +84,10 @@
   .category img {
     height: 18px;
     width: 18px;
-    filter: brightness(10);
+    filter: var(--content-icon-filter);
   }
   .category.sel img {
-    filter: brightness(1);
+    filter: none;
   }
   .category span {
     margin-inline-start: 15px;

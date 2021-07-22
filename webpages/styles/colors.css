@@ -1,8 +1,51 @@
 :root {
   --brand-orange: #ff7b26;
-  --accent-1: #2a2a2a;
-  --accent-2: #222;
-  --accent-3: #333;
-  --accent-4: #aaa;
-  --accent-5: #fff;
+  --brand-orange-opacity35: rgba(255, 123, 38, 0.35);
+  --yellow-opacity50: rgba(253, 221, 43, 0.5);
+  --green: #008000;
+  --light-green-variant: #53b31c;
+  --green-text: var(--light-green-variant);
+  --blue: #175ef8;
+  --blue-variant: #0e44b8;
+  --blue-text: #1aa0d8;
+  --red: #fd2b2b;
+  --red-opacity75: rgba(253, 43, 43, 0.75);
+  --red-variant: #d81212;
+  --dark-red-variant: #d84a12;
+  --dark-red-text: var(--dark-red-variant);
+  --white-text: #fff;
+
+  --page-background: #222;
+  --content-background: #2a2a2a;
+  --navigation-background: #333;
+  --search-toolbar-background: #2a2a2a;
+  --button-background: #222;
+  --button-hover-background: #1a1a1a;
+  --input-background: #222;
+  --search-input-background: #111;
+  --switch-background: #111;
+  --switch-inner-background: #aaa;
+  --tooltip-background: #000;
+  --comment-background: #222;
+  --unread-comment-background: #000;
+
+  --modal-overlay: rgba(0, 0, 0, 0.65);
+  --hover-highlight: rgba(255, 255, 255, 0.05);
+  --hover-darken: rgba(0, 0, 0, 0.1);
+
+  --large-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  --large-shadow-filter: drop-shadow(0 0 5px rgba(0, 0, 0, 0.5));
+  --content-border: #333;
+  --content-shadow: 0 2px 5px rgba(0, 0, 0, 0.25);
+  --content-separator: #808080;
+  --control-border: #000;
+  --input-focus-shadow: 0 0 0 3px var(--brand-orange-opacity35);
+  --fullscreen-popup-shadow: 0 -1px 7px rgba(0, 0, 0, 0.2);
+
+  --content-text: #fff;
+  --content-icon-filter: brightness(0) invert(1);
+  --description-text: #ddd;
+  --label-text: #aaa;
+  --gray-text: #808080;
+  --placeholder-text: #777;
 }

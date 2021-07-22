@@ -12,22 +12,14 @@
     <link href="../../libraries/thirdparty/Sora.css" rel="stylesheet" />
     <script src="../../libraries/thirdparty/vue.js" defer></script>
     <script src="./index.js" defer></script>
-    <link rel="preload" href="light.css" as="style" />
+    <link rel="preload" href="../styles/colors-light.css" as="style" />
   </head>
   <body class="loading">
     <div id="header">
       <div id="title">
         <img src="../../images/icon.svg" id="logo" alt="Logo" />
-        <!-- Hide template HTML until Vue loads -->
-        <span id="title-text" style="display: none" v-show="true">{{ msg("extensionName") }}</span>
-        <span
-          ><a
-            id="version"
-            style="display: none"
-            v-show="true"
-            href="#"
-            title="{{ msg('changelog') }}"
-            @click="openChangelog()"
+        <span id="title-text" v-cloak
+          >{{ msg("extensionName") }}<a id="version" href="#" title="{{ msg('changelog') }}" @click="openChangelog()"
             >v{{ version }}</a
           ></span
         >
@@ -37,8 +29,8 @@
       </div>
     </div>
     <div id="popups">
-      <div id="popup-bar">
-        <div id="popup-chooser" style="visibility: hidden" :style="{ visibility: 'visible' }">
+      <div id="popup-bar" v-cloak>
+        <div id="popup-chooser">
           <div
             v-for="popup of popups"
             class="popup-name"
@@ -46,7 +38,7 @@
             @click="setPopup(popup)"
           >
             <img v-if="popup.icon" :src="popup.icon" class="popup-icon" />
-            <a class="popup-title">{{ popup.name }} {{ popup.fullscreen ? "\u00a0" : "" }}</a>
+            <a class="popup-title">{{ popup.name }}</a>
             <a
               v-if="popup.fullscreen"
               class="popout"
@@ -60,6 +52,7 @@
         </div>
       </div>
       <iframe
+        v-cloak
         v-for="popup in popupsWithIframes"
         v-show="currentPopup === popup"
         :src="iframeSrc(popup._addonId)"
