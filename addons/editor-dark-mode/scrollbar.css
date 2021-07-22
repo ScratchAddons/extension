@@ -14,3 +14,8 @@
 .sa-body-editor ::-webkit-scrollbar-corner {
   background: transparent;
 }
+
+.scrollable-canvas_vertical-scrollbar_lbD_c,
+.scrollable-canvas_horizontal-scrollbar_2w6OD {
+  background-color: rgba(96, 96, 96, 0.8);
+}
