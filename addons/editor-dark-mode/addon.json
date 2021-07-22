@@ -597,6 +597,17 @@
   "injectAsStyleElt": true,
   "versionAdded": "1.0.0",
   "updateUserstylesOnSettingsChange": true,
+  "userscripts": [
+    {
+      "url": "bubbles.js",
+      "matches": [
+        "https://scratch.mit.edu/projects/*/",
+        "https://scratch.mit.edu/projects/*/editor",
+        "https://scratch.mit.edu/projects/*/fullscreen",
+        "https://scratch.mit.edu/projects/editor"
+      ]
+    }
+  ],
   "userstyles": [
     {
       "url": "experimental_editor.css",
@@ -790,7 +801,7 @@
       "default": false
     },
     {
-      "name": "Change the colors of variables, lists, and answer inputs on the stage",
+      "name": "Change the colors of variables, lists, speech bubbles, and answer inputs on the stage",
       "id": "affectStage",
       "type": "boolean",
       "default": false
