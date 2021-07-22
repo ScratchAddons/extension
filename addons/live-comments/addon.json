@@ -1,0 +1,21 @@
+{
+  "name": "Live comment refreshing",
+  "description": "Refreshes comments to get a near-live view.",
+  "credits": [
+    {
+      "name": "CubeyTheCube",
+      "link": "https://github.com/CubeyTheCube"
+    },
+    {
+      "name": "9gr",
+      "link": "https://scratch.mit.edu/users/9gr/"
+    }
+  ],
+  "userscripts": [
+    {
+      "url": "userscript.js",
+      "matches": ["https://scratch.mit.edu/projects/*", "https://scratch.mit.edu/studios/*"]
+    }
+  ],
+  "tags": ["community", "studios", "projects"]
+}
