@@ -1,0 +1,16 @@
+{
+  "forum-toolbar/link": "Link to:",
+  "forum-toolbar/wp": "Wikipedia",
+  "forum-toolbar/prompt-wp": "Title on Wikipedia:",
+  "forum-toolbar/wiki": "Scratch Wiki",
+  "forum-toolbar/prompt-wiki": "Title on Scratch Wiki:",
+  "forum-toolbar/google": "Google Search",
+  "forum-toolbar/prompt-google": "Search keyword:",
+  "forum-toolbar/dictionary": "Dictionary.com",
+  "forum-toolbar/prompt-dictionary": "Word:",
+  "forum-toolbar/center": "Center",
+  "forum-toolbar/code": "Code",
+  "forum-toolbar/prompt-code": "Language (for highlighting):",
+  "forum-toolbar/color": "Color",
+  "forum-toolbar/prompt-color": "Color:"
+}

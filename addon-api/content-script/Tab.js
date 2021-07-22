@@ -345,6 +345,46 @@ export default class Tab extends Listenable {
           q(".studio-tabs div:nth-child(2) > .studio-members"),
         ],
       },
+      forumToolbarTextDecoration: {
+        element: () => q(".markItUpHeader > ul"),
+        from: () => [q(".markItUpButton4")],
+        until: () => [q(".markItUpButton4 ~ .markItUpSeparator")],
+      },
+      forumToolbarLinkDecoration: {
+        element: () => q(".markItUpHeader > ul"),
+        from: () => [q(".markItUpButton6")],
+        until: () => [q(".markItUpButton6 ~ .markItUpSeparator")],
+      },
+      forumToolbarFont: {
+        element: () => q(".markItUpHeader > ul"),
+        from: () => [q(".markItUpButton7")],
+        until: () => [q(".markItUpButton7 ~ .markItUpSeparator")],
+      },
+      forumToolbarList: {
+        element: () => q(".markItUpHeader > ul"),
+        from: () => [q(".markItUpButton10")],
+        until: () => [q(".markItUpButton10 ~ .markItUpSeparator")],
+      },
+      forumToolbarDecoration: {
+        element: () => q(".markItUpHeader > ul"),
+        from: () => [q(".markItUpButton12")],
+        until: () => [q(".markItUpButton12 ~ .markItUpSeparator")],
+      },
+      forumToolbarEnvironment: {
+        element: () => q(".markItUpHeader > ul"),
+        from: () => [q(".markItUpButton13")],
+        until: () => [q(".markItUpButton13 ~ .markItUpSeparator")],
+      },
+      forumToolbarScratchblocks: {
+        element: () => q(".markItUpHeader > ul"),
+        from: () => [q(".markItUpButton14")],
+        until: () => [q(".markItUpButton14 ~ .markItUpSeparator")],
+      },
+      forumToolbarTools: {
+        element: () => q(".markItUpHeader > ul"),
+        from: () => [q(".markItUpButton16")],
+        until: () => [],
+      },
     };
 
     const spaceInfo = sharedSpaces[space];

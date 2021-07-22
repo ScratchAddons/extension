@@ -34,8 +34,11 @@ export default async function ({ addon, global, console, msg, safeMsg }) {
 
   //add it
   if (toolbar) {
-    //make sure that i can type here and that there's a textbox
-    document.querySelector(".markItUpButton5").insertAdjacentElement("afterend", inputButtonContainer);
+    addon.tab.appendToSharedSpace({
+      space: "forumToolbarLinkDecoration",
+      element: inputButtonContainer,
+      order: 1,
+    });
     document.body.appendChild(uploadInput);
   }
 

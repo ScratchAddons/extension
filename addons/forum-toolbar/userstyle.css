@@ -1,0 +1,52 @@
+.sa-forum-toolbar {
+  background-size: 16px;
+  background-repeat: no-repeat;
+  height: 16px;
+  width: 16px;
+}
+
+.sa-forum-toolbar-dropdown {
+  background-size: 16px !important;
+}
+
+.sa-forum-toolbar-dropdown ul li {
+  height: 20px;
+  width: initial !important;
+  min-width: 120px;
+  background-position: 0% 0%;
+  background-size: 20px;
+}
+
+.sa-forum-toolbar-dropdown ul li a {
+  width: initial !important;
+  padding: 0 5px 0 25px;
+}
+
+.sa-forum-toolbar-link {
+  background-image: url(./link.svg) !important;
+}
+
+.sa-forum-toolbar-center {
+  background-image: url(./center.svg);
+}
+
+.sa-forum-toolbar-wp,
+.sa-forum-toolbar-wiki {
+  background-image: url(./wp.svg);
+}
+
+.sa-forum-toolbar-google {
+  background-image: url(./google.svg);
+}
+
+.sa-forum-toolbar-dictionary {
+  background-image: url(./dictionary.svg);
+}
+
+.sa-forum-toolbar-code {
+  background-image: url(./code.svg);
+}
+
+.sa-forum-toolbar-color {
+  background-image: url(./color.svg);
+}

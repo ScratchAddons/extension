@@ -1,0 +1,154 @@
+{
+  "name": "More forum toolbar buttons",
+  "description": "Adds buttons in the forum editing toolbar to insert BBCode tags, such as [center] or [color].",
+  "tags": ["community", "forums"],
+  "userscripts": [
+    {
+      "url": "userscript.js",
+      "matches": ["editingScreens"]
+    }
+  ],
+  "userstyles": [
+    {
+      "url": "userstyle.css",
+      "matches": ["editingScreens"]
+    }
+  ],
+  "settings": [
+    {
+      "name": "Wikipedia",
+      "id": "wp",
+      "type": "boolean",
+      "default": false
+    },
+    {
+      "name": "Scratch Wiki",
+      "id": "wiki",
+      "type": "boolean",
+      "default": true
+    },
+    {
+      "name": "Google Search",
+      "id": "google",
+      "type": "boolean",
+      "default": false
+    },
+    {
+      "name": "Dictionary.com",
+      "id": "dictionary",
+      "type": "boolean",
+      "default": false
+    },
+    {
+      "name": "Center",
+      "id": "center",
+      "type": "boolean",
+      "default": true
+    },
+    {
+      "name": "Code",
+      "id": "code",
+      "type": "boolean",
+      "default": true
+    },
+    {
+      "name": "Color",
+      "id": "color",
+      "type": "boolean",
+      "default": true
+    }
+  ],
+  "customCssVariables": [
+    {
+      "name": "wp",
+      "value": {
+        "type": "ternary",
+        "true": "block",
+        "false": null,
+        "source": {
+          "type": "settingValue",
+          "settingId": "wp"
+        }
+      },
+      "dropNull": true
+    },
+    {
+      "name": "wiki",
+      "value": {
+        "type": "ternary",
+        "true": "block",
+        "false": null,
+        "source": {
+          "type": "settingValue",
+          "settingId": "wiki"
+        }
+      },
+      "dropNull": true
+    },
+    {
+      "name": "google",
+      "value": {
+        "type": "ternary",
+        "true": "block",
+        "false": null,
+        "source": {
+          "type": "settingValue",
+          "settingId": "google"
+        }
+      },
+      "dropNull": true
+    },
+    {
+      "name": "dictionary",
+      "value": {
+        "type": "ternary",
+        "true": "block",
+        "false": null,
+        "source": {
+          "type": "settingValue",
+          "settingId": "dictionary"
+        }
+      },
+      "dropNull": true
+    },
+    {
+      "name": "center",
+      "value": {
+        "type": "ternary",
+        "true": "block",
+        "false": "none",
+        "source": {
+          "type": "settingValue",
+          "settingId": "center"
+        }
+      }
+    },
+    {
+      "name": "code",
+      "value": {
+        "type": "ternary",
+        "true": "block",
+        "false": "none",
+        "source": {
+          "type": "settingValue",
+          "settingId": "code"
+        }
+      }
+    },
+    {
+      "name": "color",
+      "value": {
+        "type": "ternary",
+        "true": "block",
+        "false": "none",
+        "source": {
+          "type": "settingValue",
+          "settingId": "color"
+        }
+      }
+    }
+  ],
+  "dynamicEnable": true,
+  "dynamicDisable": true,
+  "versionAdded": "1.18.0"
+}
