@@ -1,0 +1,61 @@
+{
+  "$schema": "https://raw.githubusercontent.com/ScratchAddons/manifest-schema/dist/schema.json",
+  "name": "Ctrl+Enter to post",
+  "description": "Automatically posts the comment or post on Ctrl+Enter.",
+  "credits": [
+    {
+      "name": "9gr",
+      "link": "https://scratch.mit.edu/users/9gr"
+    }
+  ],
+  "info": [
+    {
+      "type": "notice",
+      "text": "On macOS, you can also use the Cmd key.",
+      "id": "macOS"
+    }
+  ],
+  "settings": [
+    {
+      "id": "forums",
+      "name": "Enable on forums",
+      "type": "boolean",
+      "default": true
+    },
+    {
+      "id": "comments",
+      "name": "Enable in comments",
+      "type": "boolean",
+      "default": true
+    }
+  ],
+  "userscripts": [
+    {
+      "url": "forums.js",
+      "matches": [
+        "https://scratch.mit.edu/discuss/topic/*",
+        "https://scratch.mit.edu/discuss/post/*",
+        "https://scratch.mit.edu/discuss/settings/*"
+      ],
+      "settingMatch": {
+        "id": "forums",
+        "value": true
+      }
+    },
+    {
+      "url": "comments.js",
+      "matches": [
+        "https://scratch.mit.edu/studios/*",
+        "https://scratch.mit.edu/users/*",
+        "https://scratch.mit.edu/projects/*"
+      ],
+      "settingMatch": {
+        "id": "comments",
+        "value": true
+      }
+    }
+  ],
+  "versionAdded": "1.18.0",
+  "tags": ["community", "forums"],
+  "enabledByDefault": false
+}
